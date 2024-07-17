@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -21,4 +22,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "MKung"
 include(":app")
- 
+include(":core:common")
+include(":core:data")
+include(":core:network")
+include(":core:designsystem")
+include(":core:domain")
+include(":core:model")
+include(":core:ui")
+include(":feature:home")
+include(":feature:ask")
+include(":feature:mypage")
