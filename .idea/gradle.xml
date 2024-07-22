@@ -37,6 +37,7 @@
             <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/mypage" />
             <option value="$PROJECT_DIR$/feature/signup" />
+            <option value="$PROJECT_DIR$/feature/splash" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
