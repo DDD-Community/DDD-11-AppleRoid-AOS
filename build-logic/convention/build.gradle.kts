@@ -51,8 +51,8 @@ gradlePlugin {
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "mkung.android.feature"
-            implementationClass = "AndroidFeatureConventionPlugin"
+            id = "mkung.android.feature.ui"
+            implementationClass = "AndroidFeatureUiConventionPlugin"
         }
         register("androidHilt") {
             id = "mkung.android.hilt"
@@ -61,6 +61,10 @@ gradlePlugin {
         register("androidRetrofit") {
             id = "mkung.android.retrofit"
             implementationClass = "AndroidRetrofitConventionPlugin"
+        }
+        register("jvmLibrary") {
+            id = "mkung.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
         }
     }
 }

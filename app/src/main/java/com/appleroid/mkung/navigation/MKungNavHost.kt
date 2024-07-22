@@ -1,0 +1,29 @@
+package com.appleroid.mkung.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import com.appleroid.feature.ask.navigation.askGraph
+import com.appleroid.feature.home.navigation.HOME_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.home.navigation.homeGraph
+import com.appleroid.feature.mypage.navigation.myPageGraph
+import com.appleroid.mkung.ui.MKungAppState
+
+
+@Composable
+fun MKungNavHost(
+    mKungAppState: MKungAppState,
+    modifier: Modifier = Modifier,
+    startDestination: String = HOME_GRAPH_ROUTE_PATTERN
+){
+    val navController = mKungAppState.navController
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
+        modifier = modifier,
+    ){
+        homeGraph{}
+        askGraph{}
+        myPageGraph{}
+    }
+}

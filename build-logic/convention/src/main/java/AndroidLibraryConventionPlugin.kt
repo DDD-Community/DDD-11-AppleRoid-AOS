@@ -31,11 +31,6 @@ class AndroidLibraryConventionPlugin: Plugin<Project> {
                     consumerProguardFiles("consumer-rules.pro")
                 }
 
-
-                composeOptions {
-                    kotlinCompilerExtensionVersion = libs.findVersion("composeCompiler").get().toString()
-                }
-
                 testOptions{
                     unitTests.all { test ->
                         test.useJUnitPlatform()

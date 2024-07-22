@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.appleroid.mkung.ui.MKungApp
 import com.appleroid.mkung.ui.theme.MKungTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,31 +25,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MKungTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.fillMaxSize()){
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding).align(Alignment.Center)
-                        )
-                    }
-
+                CompositionLocalProvider(
+                    androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.lifecycle.compose.LocalLifecycleOwner.current
+                ){
+                    MKungApp()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Composable
-fun GreetingPreview() {
-    MKungTheme {
-        Greeting("Android")
     }
 }

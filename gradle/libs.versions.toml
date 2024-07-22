@@ -35,6 +35,7 @@ retrofit = "2.11.0"
 retrofitKotlinxSerializationJson = "1.0.0"
 uiTestJunit4 = "1.6.8"
 androidTools = "31.5.1"
+androidxMetrics = "1.0.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
+androidx-metrics = { group = "androidx.metrics", name = "metrics-performance", version.ref = "androidxMetrics" }
 
 # gradle
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -165,3 +167,4 @@ mkung-android-library-compose = { id = "mkung.android.library.compose", version 
 mkung-android-feature-ui = { id = "mkung.android.feature.ui", version = "unspecified" } # AndroidFeatureUiConventionPlugin :feature 하위 모듈에 적용
 mkung-android-hilt = { id = "mkung.android.hilt", version = "unspecified" } # AndroidHiltConventionPlugin
 mkung-android-retrofit = { id = "mkung.android.retrofit", version = "unspecified" } #AndroidRetrofitConventionPlugin
+mkung-jvm-library = { id = "mkung.jvm.library", version = "unspecified" } #JvmLibraryConventionPlugin
