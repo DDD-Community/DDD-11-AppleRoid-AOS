@@ -2,7 +2,6 @@ import com.android.build.api.dsl.LibraryExtension
 import com.appleroid.mkung.ExtensionType
 import com.appleroid.mkung.configureBuildTypes
 import com.appleroid.mkung.configureKotlinAndroid
-import com.appleroid.mkung.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

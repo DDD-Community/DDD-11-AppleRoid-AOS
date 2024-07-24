@@ -5,7 +5,6 @@ import com.android.build.api.dsl.BuildType
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Project
-import com.appleroid.mkung.ExtensionType
 import org.gradle.kotlin.dsl.configure
 import java.io.File
 import java.util.Properties

@@ -1,7 +1,8 @@
 <resources>
     <!-- Status bar -->
     <color name="card_background">#212121</color>
+    <color name="button_border">#FCBA66</color>
     <color name="color_grey01">#B9B9B9</color>
     <color name="color_grey04">#383838</color>
-    <color name="button_border">#FCBA66</color>
+    <color name="color_grey06">#141414</color>
 </resources>

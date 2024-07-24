@@ -1,9 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.appleroid.mkung.configureAndroidCompose
-import com.appleroid.mkung.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.getByType
 
 class AndroidApplicationComposeConventionPlugin : Plugin<Project> {

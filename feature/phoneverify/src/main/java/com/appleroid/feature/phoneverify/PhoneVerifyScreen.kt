@@ -1,5 +1,6 @@
 package com.appleroid.feature.phoneverify
 
+import VerificationBottomSheet
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,19 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,120 +44,125 @@ fun PhoneVerifyRoute() {
     PhoneVerifyScreen()
 }
 
-
 @Composable
 fun PhoneVerifyScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(bottom = 100.dp)
+            .systemBarsPadding()
+            .padding(bottom = 47.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             TopLayer()
             NotificationTitles()
             InfoInputCard()
 
             Spacer(modifier = Modifier.weight(1f))
 
-            PhoneVerifyButton(onClick = {
-
-            })
+            PhoneVerifyButton()
         }
     }
 }
 
 @Composable
 fun TopLayer() {
-    Box(
+    Text(
         modifier = Modifier
-            .height(79.dp)
             .fillMaxWidth()
-    ) {
-        Text(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(top = 50.dp),
-            text = stringResource(R.string.title),
-            style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White,
-                textAlign = TextAlign.Center
-            )
+            .padding(top = 26.dp),
+        text = stringResource(R.string.title),
+        style = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            textAlign = TextAlign.Center
         )
-    }
+    )
 }
 
 @Composable
 fun NotificationTitles() {
-    Text(
-        modifier = Modifier.padding(start = 24.dp, top = 20.dp, end = 24.dp),
-        text = stringResource(R.string.welcome_message),
-        style = TextStyle(
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Start
+    Column(
+        modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.welcome_message),
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Start
+            )
         )
-    )
-
-    Text(
-        modifier = Modifier.padding(start = 24.dp, top = 10.dp, end = 24.dp),
-        text = stringResource(R.string.verification_message),
-        style = TextStyle(
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Normal,
-            color = colorResource(R.color.color_grey04),
-            textAlign = TextAlign.Start
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = stringResource(R.string.verification_message),
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                color = colorResource(R.color.color_grey04),
+                textAlign = TextAlign.Start
+            )
         )
-    )
+    }
 }
 
 @Composable
 fun InfoInputCard() {
     Box(
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, top = 30.dp)
-            .wrapContentSize()
+            .padding(horizontal = 20.dp, vertical = 30.dp)
             .background(
                 color = colorResource(R.color.card_background),
                 shape = RoundedCornerShape(12.dp)
             )
+            .padding(18.dp)
     ) {
         Column {
-            InputPhoneNumber()
-            InputName()
+            InputField(
+                label = stringResource(R.string.card_phone_number_title),
+                placeholder = stringResource(R.string.card_telecom),
+                keyboardType = KeyboardType.NumberPassword
+            )
+            Spacer(modifier = Modifier.height(11.dp))
+
+            InputField(
+                label = stringResource(R.string.card_name_title),
+                keyboardType = KeyboardType.Text
+            )
         }
     }
 }
 
 @Composable
-fun InputPhoneNumber() {
+fun InputField(
+    label: String,
+    placeholder: String = "",
+    keyboardType: KeyboardType
+) {
     var text by remember { mutableStateOf("") }
-    val regex = "^01[0-1|6-9]\\d{3,4}\\d{4}$".toRegex()
 
-    Box(
-        modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp, top = 18.dp)
-    ) {
-        Column {
-            Text(
-                modifier = Modifier.height(18.dp),
-                text = stringResource(R.string.card_phone_number_title),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(R.color.color_grey01),
-                    textAlign = TextAlign.Start
-                )
+    Column {
+        Text(
+            modifier = Modifier.height(18.dp),
+            text = label,
+            style = TextStyle(
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = colorResource(R.color.color_grey01),
+                textAlign = TextAlign.Start
             )
-
-            Row {
+        )
+        Spacer(modifier = Modifier.height(9.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (placeholder.isNotEmpty()) {
                 Text(
-                    modifier = Modifier.height(27.dp),
-                    text = stringResource(R.string.card_telecom),
+                    text = placeholder,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
@@ -169,94 +170,49 @@ fun InputPhoneNumber() {
                         textAlign = TextAlign.Start
                     )
                 )
-
                 Image(
                     modifier = Modifier
-                        .height(10.dp)
-                        .width(13.dp)
-                        .align(Alignment.CenterVertically)
-                        .padding(start = 2.dp),
+                        .padding(start = 2.dp)
+                        .size(13.dp, 10.dp),
                     painter = painterResource(R.drawable.ic_polygon),
-                    contentDescription = "통신사 선택 아이콘")
-
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(27.dp)
-                        .padding(start = 10.dp)
-                        .background(Color.Transparent)
-                        .align(Alignment.CenterVertically),
-                    value = text,
-                    cursorBrush = SolidColor(Color.Transparent),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
-                    onValueChange = {
-                        text = it
-                    },
-                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-                    singleLine = true
+                    contentDescription = null
                 )
             }
-
-            Box(modifier = Modifier
-                .padding(top = 13.dp)
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(colorResource(R.color.color_grey04))
-            )
-        }
-    }
-}
-
-@Composable
-fun InputName() {
-    var text by remember { mutableStateOf("") }
-
-    Box(
-        modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp, top = 11.dp, bottom = 18.dp)
-    ) {
-        Column {
-            Text(
-                modifier = Modifier.height(18.dp),
-                text = stringResource(R.string.card_name_title),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(R.color.color_grey01),
-                    textAlign = TextAlign.Start
-                )
-            )
-
             BasicTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(27.dp)
+                    .padding(start = 10.dp)
                     .background(Color.Transparent),
                 value = text,
                 cursorBrush = SolidColor(Color.Transparent),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text
-                ),
-                onValueChange = {
-                    text = it
-                },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+                onValueChange = { text = it },
                 textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                 singleLine = true
             )
         }
+        Spacer(
+            modifier = Modifier
+                .padding(top = 10.dp)
+                .height(1.dp)
+                .fillMaxWidth()
+                .background(colorResource(R.color.color_grey04))
+        )
     }
 }
 
 @Composable
-fun PhoneVerifyButton(onClick: () -> Unit) {
+fun PhoneVerifyButton() {
+    var sheetState by remember { mutableStateOf(false) }
+
     Button(
         modifier = Modifier
             .height(52.dp)
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp),
-        onClick = onClick,
+            .padding(horizontal = 20.dp),
+        onClick = {
+            sheetState = true
+        },
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, colorResource(R.color.button_border)),
         colors = ButtonDefaults.buttonColors(
@@ -264,8 +220,8 @@ fun PhoneVerifyButton(onClick: () -> Unit) {
             contentColor = colorResource(R.color.card_background)
         )
     ) {
+
         Text(
-            modifier = Modifier.height(24.dp),
             text = stringResource(R.string.verification),
             style = TextStyle(
                 fontSize = 16.sp,
@@ -275,4 +231,10 @@ fun PhoneVerifyButton(onClick: () -> Unit) {
             )
         )
     }
+
+    VerificationBottomSheet(
+        sheetState = sheetState,
+        setSheetState = { newState ->
+        sheetState = newState
+    })
 }
