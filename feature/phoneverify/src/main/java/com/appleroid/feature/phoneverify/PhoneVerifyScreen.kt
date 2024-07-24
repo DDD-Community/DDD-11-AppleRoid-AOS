@@ -86,9 +86,10 @@ fun TopLayer() {
 @Composable
 fun NotificationTitles() {
     Column(
-        modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
+        modifier = Modifier.padding(horizontal = 24.dp)
     ) {
         Text(
+            modifier = Modifier.padding(top = 30.dp),
             text = stringResource(R.string.welcome_message),
             style = TextStyle(
                 fontSize = 18.sp,
@@ -98,6 +99,7 @@ fun NotificationTitles() {
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
+
         Text(
             text = stringResource(R.string.verification_message),
             style = TextStyle(
@@ -119,7 +121,7 @@ fun InfoInputCard() {
                 color = colorResource(R.color.card_background),
                 shape = RoundedCornerShape(12.dp)
             )
-            .padding(18.dp)
+            .padding(start = 24.dp, end = 24.dp, top = 18.dp, bottom = 18.dp)
     ) {
         Column {
             InputField(
@@ -172,8 +174,7 @@ fun InputField(
                 )
                 Image(
                     modifier = Modifier
-                        .padding(start = 2.dp)
-                        .size(13.dp, 10.dp),
+                        .padding(start = 4.dp),
                     painter = painterResource(R.drawable.ic_polygon),
                     contentDescription = null
                 )
