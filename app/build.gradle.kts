@@ -57,8 +57,7 @@ dependencies {
     implementation(projects.feature.ask)
     implementation(projects.feature.home)
     implementation(projects.feature.mypage)
-    implementation(projects.feature.signup)
-    implementation(projects.feature.splash)
+    implementation(projects.feature.phoneverify)
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">휴대폰 인증</string>
+    <string name="welcome_message">MBTI 이러쿵 저러쿵\n엠쿵에 오신 것을 환영합니다!</string>
+    <string name="verification_message">엠쿵을 시작하기 위해 전화번호 인증이 필요해요.</string>
+    <string name="card_phone_number_title">휴대폰 번호</string>
+    <string name="card_name_title">이름</string>
+    <string name="card_telecom">통신사</string>
+    <string name="verification">인증하기</string>
+</resources>

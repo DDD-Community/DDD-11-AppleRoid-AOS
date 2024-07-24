@@ -4,15 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import com.appleroid.feature.signup.navigation.SIGN_UP_GRAPH_ROUTE_PATTERN
-import com.appleroid.feature.signup.navigation.navigationToSignUpGraph
-import com.appleroid.feature.signup.navigation.signUpGraph
-import com.appleroid.mkung.ui.MKungApp
+import com.appleroid.feature.phoneverify.navigation.PHONE_VERIFY_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.phoneverify.navigation.phoneVerifyGraph
 import com.appleroid.mkung.ui.rememberMKungState
 import com.appleroid.mkung.ui.theme.MKungTheme
 
@@ -28,8 +23,8 @@ class MainActivity : ComponentActivity() {
                 val appState = rememberMKungState()
                 NavHost(
                     navController = appState.navController,
-                    startDestination = SIGN_UP_GRAPH_ROUTE_PATTERN) {
-                    signUpGraph {
+                    startDestination = PHONE_VERIFY_GRAPH_ROUTE_PATTERN) {
+                    phoneVerifyGraph {
 
                     }
                 }
