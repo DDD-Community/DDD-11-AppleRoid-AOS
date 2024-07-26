@@ -1,9 +1,8 @@
-package com.appleroid.feature.phoneverify
+package com.appleroid.feature.nickname
 
-import VerificationBottomSheet
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,11 +12,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,10 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,12 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PhoneVerifyRoute() {
-    PhoneVerifyScreen()
+fun NickNameRoute(){
+    NickNameScreen()
 }
 
+
 @Composable
-fun PhoneVerifyScreen() {
+fun NickNameScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,15 +58,16 @@ fun PhoneVerifyScreen() {
             .padding(bottom = 47.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             TopLayer()
             NotificationTitles()
-            InfoInputCard()
+            NickNameInputCard()
 
             Spacer(modifier = Modifier.weight(1f))
 
-            PhoneVerifyButton()
+            ContinueButton()
         }
     }
 }
@@ -72,7 +78,7 @@ fun TopLayer() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 26.dp),
-        text = stringResource(R.string.phone_verify_title),
+        text = stringResource(R.string.nick_name_title),
         style = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
@@ -84,12 +90,12 @@ fun TopLayer() {
 
 @Composable
 fun NotificationTitles() {
-    Column(
-        modifier = Modifier.padding(horizontal = 24.dp)
-    ) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+
         Text(
-            modifier = Modifier.padding(top = 20.dp),
-            text = stringResource(R.string.phone_verify_welcome_message),
+            modifier = Modifier
+                .padding(top = 20.dp),
+            text = stringResource(R.string.nick_name_welcome_message),
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -97,10 +103,11 @@ fun NotificationTitles() {
                 textAlign = TextAlign.Start
             )
         )
+
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = stringResource(R.string.phone_verify_verification_message),
+            text = stringResource(R.string.nick_name_verification_message),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
@@ -112,97 +119,85 @@ fun NotificationTitles() {
 }
 
 @Composable
-fun InfoInputCard() {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 30.dp)
-            .background(
-                color = colorResource(R.color.card_background),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(start = 24.dp, end = 24.dp, top = 18.dp, bottom = 18.dp)
-    ) {
-        Column {
-            InputField(
-                label = stringResource(R.string.phone_verify_card_phone_number_title),
-                placeholder = stringResource(R.string.phone_verify_card_telecom),
-                keyboardType = KeyboardType.NumberPassword
-            )
-            Spacer(modifier = Modifier.height(11.dp))
-
-            InputField(
-                label = stringResource(R.string.phone_verify_card_name_title),
-                keyboardType = KeyboardType.Text
-            )
-        }
-    }
-}
-
-@Composable
-fun InputField(
-    label: String,
-    placeholder: String = "",
-    keyboardType: KeyboardType
-) {
+fun NickNameInputCard() {
     var text by remember { mutableStateOf("") }
 
-    Column {
-        Text(
-            modifier = Modifier.height(18.dp),
-            text = label,
-            style = TextStyle(
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = colorResource(R.color.color_grey01),
-                textAlign = TextAlign.Start
-            )
+    Text(
+        modifier = Modifier.padding(top = 24.dp, start = 24.dp, bottom = 5.dp),
+        text = stringResource(R.string.nick_name),
+        style = TextStyle(
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Normal,
+            color = colorResource(R.color.color_grey01),
+            textAlign = TextAlign.Start
         )
-        Spacer(modifier = Modifier.height(9.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (placeholder.isNotEmpty()) {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.White,
-                        textAlign = TextAlign.Start
-                    )
-                )
-                Image(
-                    modifier = Modifier
-                        .padding(start = 4.dp),
-                    painter = painterResource(R.drawable.ic_polygon),
-                    contentDescription = null
-                )
-            }
+    )
+
+    Box(
+        modifier = Modifier
+            .height(42.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(colorResource(R.color.card_background))
+    ) {
+        Row (modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 14.dp, end = 14.dp)) {
+
             BasicTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp)
+                    .wrapContentWidth()
+                    .align(Alignment.CenterVertically)
                     .background(Color.Transparent),
                 value = text,
                 cursorBrush = SolidColor(Color.Transparent),
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-                onValueChange = { text = it },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                onValueChange = {
+                    if (it.length <= 10) {
+                        text = it
+                    }
+                },
                 textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-                singleLine = true
+                singleLine = true,
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Card(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .border(
+                        1.dp,
+                        colorResource(R.color.color_border_grey),
+                        RoundedCornerShape(17.dp)
+                    )
+                    .align(Alignment.CenterVertically),
+
+                colors = CardDefaults.cardColors(
+                    containerColor = colorResource(R.color.card_background)
+                )
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.nick_name_duplicate_check),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.White,
+                        )
+                    )
+                }
+            }
         }
-        Spacer(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(colorResource(R.color.color_grey04))
-        )
     }
 }
 
 @Composable
-fun PhoneVerifyButton() {
+fun ContinueButton() {
     var sheetState by remember { mutableStateOf(false) }
 
     Button(
@@ -222,7 +217,7 @@ fun PhoneVerifyButton() {
     ) {
 
         Text(
-            text = stringResource(R.string.phone_verify_verification),
+            text = stringResource(R.string.nick_name_continue),
             style = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -231,10 +226,4 @@ fun PhoneVerifyButton() {
             )
         )
     }
-
-    VerificationBottomSheet(
-        sheetState = sheetState,
-        setSheetState = { newState ->
-        sheetState = newState
-    })
 }

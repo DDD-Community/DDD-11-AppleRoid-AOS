@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
+import com.appleroid.feature.nickname.navigation.NICK_NAME_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.nickname.navigation.nickNameGraph
 import com.appleroid.feature.phoneverify.navigation.PHONE_VERIFY_GRAPH_ROUTE_PATTERN
 import com.appleroid.feature.phoneverify.navigation.phoneVerifyGraph
 import com.appleroid.mkung.ui.rememberMKungState
@@ -20,12 +22,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             MKungTheme {
                 val appState = rememberMKungState()
-                NavHost(
+                /*NavHost(
                     navController = appState.navController,
                     startDestination = PHONE_VERIFY_GRAPH_ROUTE_PATTERN) {
-                    phoneVerifyGraph {
+                    phoneVerifyGraph {}
+                }*/
 
-                    }
+                NavHost(
+                    navController = appState.navController,
+                    startDestination = NICK_NAME_GRAPH_ROUTE_PATTERN) {
+                    nickNameGraph {  }
                 }
 
                 /*CompositionLocalProvider(LocalLifecycleOwner provides LocalLifecycleOwner.current) {

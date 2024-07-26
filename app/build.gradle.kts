@@ -45,7 +45,6 @@ android {
     }
 }
 
-
 dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -58,6 +57,7 @@ dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.mypage)
     implementation(projects.feature.phoneverify)
+    implementation(projects.feature.nickname)
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
