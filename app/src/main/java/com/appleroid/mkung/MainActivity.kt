@@ -4,32 +4,47 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.appleroid.mkung.ui.MKungApp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.NavHost
+import com.appleroid.feature.mbti.navigation.MBTI_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.mbti.navigation.mbtiGraph
+import com.appleroid.feature.nickname.navigation.NICK_NAME_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.nickname.navigation.nickNameGraph
+import com.appleroid.feature.phoneverify.navigation.PHONE_VERIFY_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.phoneverify.navigation.phoneVerifyGraph
+import com.appleroid.mkung.ui.rememberMKungState
 import com.appleroid.mkung.ui.theme.MKungTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        installSplashScreen()
+
         setContent {
             MKungTheme {
-                CompositionLocalProvider(
-                    androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.lifecycle.compose.LocalLifecycleOwner.current
-                ){
-                    MKungApp()
+                val appState = rememberMKungState()
+                /*NavHost(
+                    navController = appState.navController,
+                    startDestination = PHONE_VERIFY_GRAPH_ROUTE_PATTERN) {
+                    phoneVerifyGraph {}
+                }*/
+
+                /*NavHost(
+                    navController = appState.navController,
+                    startDestination = NICK_NAME_GRAPH_ROUTE_PATTERN) {
+                    nickNameGraph {  }
+                }*/
+
+                NavHost(
+                    navController = appState.navController,
+                    startDestination = MBTI_GRAPH_ROUTE_PATTERN) {
+                    mbtiGraph {  }
                 }
+
+                /*CompositionLocalProvider(LocalLifecycleOwner provides LocalLifecycleOwner.current) {
+                    MKungApp()
+                }*/
             }
         }
     }

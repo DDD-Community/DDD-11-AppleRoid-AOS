@@ -1,13 +1,5 @@
 package com.appleroid.mkung.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.rounded.Build
-import androidx.compose.material.icons.rounded.Create
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.appleroid.mkung.R
 
 enum class TopDestination(
