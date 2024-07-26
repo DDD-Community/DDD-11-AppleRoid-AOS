@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
+import com.appleroid.feature.mbti.navigation.MBTI_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.mbti.navigation.mbtiGraph
 import com.appleroid.feature.nickname.navigation.NICK_NAME_GRAPH_ROUTE_PATTERN
 import com.appleroid.feature.nickname.navigation.nickNameGraph
 import com.appleroid.feature.phoneverify.navigation.PHONE_VERIFY_GRAPH_ROUTE_PATTERN
@@ -28,10 +30,16 @@ class MainActivity : ComponentActivity() {
                     phoneVerifyGraph {}
                 }*/
 
-                NavHost(
+                /*NavHost(
                     navController = appState.navController,
                     startDestination = NICK_NAME_GRAPH_ROUTE_PATTERN) {
                     nickNameGraph {  }
+                }*/
+
+                NavHost(
+                    navController = appState.navController,
+                    startDestination = MBTI_GRAPH_ROUTE_PATTERN) {
+                    mbtiGraph {  }
                 }
 
                 /*CompositionLocalProvider(LocalLifecycleOwner provides LocalLifecycleOwner.current) {
