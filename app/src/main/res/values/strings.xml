@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MKung</string>
 
+    <string name="icon_text_join">회원가입</string>
     <string name="icon_text_home">홈</string>
     <string name="icon_text_ask">질문 추가</string>
     <string name="icon_text_my_page">마이페이지</string>
