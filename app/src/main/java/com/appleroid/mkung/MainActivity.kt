@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.appleroid.core.designsystem.component.theme.MKungTheme
+import com.appleroid.core.designsystem.theme.MKungTheme
 import com.appleroid.mkung.ui.MKungApp
 
 class MainActivity : ComponentActivity() {

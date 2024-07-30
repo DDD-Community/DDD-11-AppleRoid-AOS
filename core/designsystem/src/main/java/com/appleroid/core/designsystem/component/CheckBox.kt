@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.R
-import com.appleroid.core.designsystem.component.theme.GREY05
-import com.appleroid.core.designsystem.component.theme.POINT01
-import com.appleroid.core.designsystem.component.theme.WHITE
+import com.appleroid.core.designsystem.theme.GREY05
+import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.theme.WHITE
 
 @Composable
 fun WithTextCheckBox(

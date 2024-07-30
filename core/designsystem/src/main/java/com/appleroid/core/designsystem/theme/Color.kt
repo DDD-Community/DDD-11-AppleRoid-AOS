@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.theme
+package com.appleroid.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

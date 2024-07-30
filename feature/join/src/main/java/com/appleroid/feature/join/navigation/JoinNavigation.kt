@@ -1,5 +1,6 @@
 package com.appleroid.feature.join.navigation
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -16,6 +17,7 @@ fun NavController.navigationToJoinGraph(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.joinGraph(
+    joinCompleteClicked: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
     navigation(
@@ -23,7 +25,7 @@ fun NavGraphBuilder.joinGraph(
         startDestination = JOIN_ROUTE,
     ){
         composable(route = JOIN_ROUTE) {
-            JoinRoute()
+            JoinRoute(joinCompleteClicked = joinCompleteClicked)
         }
         nestedGraphs()
     }

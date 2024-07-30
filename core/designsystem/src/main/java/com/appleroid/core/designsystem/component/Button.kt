@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,9 +12,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.appleroid.core.designsystem.component.theme.BTN_BACKGROUND
-import com.appleroid.core.designsystem.component.theme.GREY01
-import com.appleroid.core.designsystem.component.theme.POINT01
+import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
+import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.POINT01
 
 @Composable
 fun MKungBtn(

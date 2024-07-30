@@ -28,11 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.appleroid.core.designsystem.component.component.NavigationBarItem
+import com.appleroid.core.designsystem.component.NavigationBarItem
+import com.appleroid.core.designsystem.theme.GREY04
+import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.mkung.navigation.MKungNavHost
 import com.appleroid.mkung.navigation.TopDestination
-import com.appleroid.core.designsystem.component.theme.GREY04
-import com.appleroid.core.designsystem.component.theme.GREY06
 
 @Composable
 fun MKungApp(

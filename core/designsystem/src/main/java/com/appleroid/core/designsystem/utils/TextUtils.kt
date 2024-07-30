@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.utils
+package com.appleroid.core.designsystem.utils
 
 import android.content.res.Resources
 import androidx.compose.runtime.Composable

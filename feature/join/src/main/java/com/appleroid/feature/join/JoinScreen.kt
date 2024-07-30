@@ -61,23 +61,23 @@ import com.appleroid.core.common.utils.isValidBirthDate
 import com.appleroid.core.common.utils.isValidKoreanName
 import com.appleroid.core.common.utils.isValidPhoneNumber
 import com.appleroid.core.common.utils.isValidResidentNumberFirstDigit
-import com.appleroid.core.designsystem.component.component.CheckTextField
-import com.appleroid.core.designsystem.component.component.DescriptionText
-import com.appleroid.core.designsystem.component.component.LabelText
-import com.appleroid.core.designsystem.component.component.MKungBtn
-import com.appleroid.core.designsystem.component.component.MKungTextField
-import com.appleroid.core.designsystem.component.component.TitleText
-import com.appleroid.core.designsystem.component.component.TopAppBar
-import com.appleroid.core.designsystem.component.component.WithTextCheckBox
-import com.appleroid.core.designsystem.component.theme.BTN_BACKGROUND
-import com.appleroid.core.designsystem.component.theme.DOT
-import com.appleroid.core.designsystem.component.theme.GREY01
-import com.appleroid.core.designsystem.component.theme.GREY04
-import com.appleroid.core.designsystem.component.theme.GREY06
-import com.appleroid.core.designsystem.component.theme.POINT01
-import com.appleroid.core.designsystem.component.utils.PhoneNumberVisualTransformation
-import com.appleroid.core.designsystem.component.utils.isKorean
-import com.appleroid.core.designsystem.component.utils.keyboardAsState
+import com.appleroid.core.designsystem.component.CheckTextField
+import com.appleroid.core.designsystem.component.DescriptionText
+import com.appleroid.core.designsystem.component.LabelText
+import com.appleroid.core.designsystem.component.MKungBtn
+import com.appleroid.core.designsystem.component.MKungTextField
+import com.appleroid.core.designsystem.component.TitleText
+import com.appleroid.core.designsystem.component.TopAppBar
+import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
+import com.appleroid.core.designsystem.theme.DOT
+import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.GREY04
+import com.appleroid.core.designsystem.theme.GREY06
+import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.utils.PhoneNumberVisualTransformation
+import com.appleroid.core.designsystem.utils.isKorean
+import com.appleroid.core.designsystem.utils.keyboardAsState
 import com.appleroid.feature.join.model.BottomSheetType
 import com.appleroid.feature.join.model.CarrierType
 import com.appleroid.feature.join.model.PagerType
@@ -86,15 +86,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun JoinRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    joinCompleteClicked: () -> Unit,
 ) {
-    JoinScreen(modifier)
+    JoinScreen(modifier, joinCompleteClicked)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JoinScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    joinCompleteClicked: () -> Unit
 ) {
     val pagerState = rememberPagerState { 4 }
     val scope = rememberCoroutineScope()
@@ -127,7 +129,7 @@ fun JoinScreen(
         }
     }
 
-    LaunchedEffect(
+    /*LaunchedEffect(
         pagerState.currentPage,
         selectedAllTerm,
         phoneNumber,
@@ -147,6 +149,24 @@ fun JoinScreen(
             }
             PagerType.NICKNAME.index -> false
             else -> false
+        }
+    }
+*/
+
+    LaunchedEffect(
+        pagerState.currentPage,
+        selectedAllTerm,
+        phoneNumber,
+        registrationNumber,
+        registrationSecondNumber,
+        name,
+        selectedCarrier
+    ){
+        bottomBtnEnable = when(pagerState.currentPage){
+            PagerType.TERM_AGREE.index ->true
+            PagerType.PHONE_VERIFY.index -> true
+            PagerType.NICKNAME.index -> true
+            else -> true
         }
     }
 
@@ -242,13 +262,15 @@ fun JoinScreen(
                     PagerType.NICKNAME.index -> PagerType.NICKNAME.bottomBtnRes
                     else -> PagerType.MBTI.bottomBtnRes
                 }
-            )
+            ),
         ){
             scope.launch {
-                if(pagerState.currentPage == PagerType.PHONE_VERIFY.index){
+                if (pagerState.currentPage == PagerType.PHONE_VERIFY.index){
                     bottomSheetType = BottomSheetType.VERIFY
                     isShowBottomSheet = true
-                }else{
+                } else if (pagerState.currentPage == PagerType.MBTI.index) {
+                    joinCompleteClicked.invoke()
+                } else {
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
             }

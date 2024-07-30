@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.MaterialTheme

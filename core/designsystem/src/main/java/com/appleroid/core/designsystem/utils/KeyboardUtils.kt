@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.utils
+package com.appleroid.core.designsystem.utils
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime

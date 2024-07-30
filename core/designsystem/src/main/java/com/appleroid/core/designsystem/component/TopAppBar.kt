@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
