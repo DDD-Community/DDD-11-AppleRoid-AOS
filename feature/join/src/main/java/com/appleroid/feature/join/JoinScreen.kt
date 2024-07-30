@@ -163,7 +163,7 @@ fun JoinScreen(
         selectedCarrier
     ){
         bottomBtnEnable = when(pagerState.currentPage){
-            PagerType.TERM_AGREE.index ->true
+            PagerType.TERM_AGREE.index -> true
             PagerType.PHONE_VERIFY.index -> true
             PagerType.NICKNAME.index -> true
             else -> true
@@ -263,7 +263,7 @@ fun JoinScreen(
                     else -> PagerType.MBTI.bottomBtnRes
                 }
             ),
-        ){
+        ) {
             scope.launch {
                 if (pagerState.currentPage == PagerType.PHONE_VERIFY.index){
                     bottomSheetType = BottomSheetType.VERIFY

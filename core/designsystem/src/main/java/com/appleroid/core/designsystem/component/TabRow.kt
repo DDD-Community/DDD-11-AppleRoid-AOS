@@ -1,5 +1,6 @@
 package com.appleroid.core.designsystem.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import com.appleroid.core.designsystem.utils.textSp
 
 @Composable
 fun MKungTabRow(
+    modifier: Modifier = Modifier,
     tabWidth: Dp,
     feedTypes: List<String>,
     selectedTab: (Int) -> Unit
@@ -32,11 +34,11 @@ fun MKungTabRow(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     TabRow(
-        modifier = Modifier.width(tabWidth).padding(start = 20.dp),
+        modifier = modifier.width(tabWidth).padding(start = 20.dp),
         selectedTabIndex = selectedTabIndex,
         indicator = { tabPositions ->
             TabRowDefaults.SecondaryIndicator(
-                modifier = Modifier
+                modifier = modifier
                     .tabIndicatorOffset(tabPositions[selectedTabIndex])
                     .width(tabPositions[selectedTabIndex].width)
                     .height(1.dp),
@@ -45,7 +47,7 @@ fun MKungTabRow(
         }
     ) {
         feedTypes.forEachIndexed { index, title ->
-            Tab(modifier = Modifier
+            Tab(modifier = modifier
                 .wrapContentSize()
                 .background(Black),
                 selected = selectedTabIndex == index,
