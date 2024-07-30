@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import com.appleroid.feature.ask.navigation.askGraph
 import com.appleroid.feature.home.navigation.HOME_GRAPH_ROUTE_PATTERN
 import com.appleroid.feature.home.navigation.homeGraph
+import com.appleroid.feature.join.navigation.JOIN_GRAPH_ROUTE_PATTERN
+import com.appleroid.feature.join.navigation.joinGraph
 import com.appleroid.feature.mypage.navigation.myPageGraph
 import com.appleroid.mkung.ui.MKungAppState
 
@@ -14,7 +16,7 @@ import com.appleroid.mkung.ui.MKungAppState
 fun MKungNavHost(
     mKungAppState: MKungAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = HOME_GRAPH_ROUTE_PATTERN
+    startDestination: String = JOIN_GRAPH_ROUTE_PATTERN
 ){
     val navController = mKungAppState.navController
     NavHost(
@@ -22,6 +24,7 @@ fun MKungNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ){
+        joinGraph{}
         homeGraph{}
         askGraph{}
         myPageGraph{}

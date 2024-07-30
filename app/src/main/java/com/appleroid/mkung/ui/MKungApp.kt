@@ -28,11 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.appleroid.core.designsystem.component.NavigationBarItem
+import com.appleroid.core.designsystem.component.component.NavigationBarItem
 import com.appleroid.mkung.navigation.MKungNavHost
 import com.appleroid.mkung.navigation.TopDestination
-import com.appleroid.mkung.ui.theme.GREY04
-import com.appleroid.mkung.ui.theme.GREY06
+import com.appleroid.core.designsystem.component.theme.GREY04
+import com.appleroid.core.designsystem.component.theme.GREY06
 
 @Composable
 fun MKungApp(
@@ -45,12 +45,14 @@ fun MKungApp(
         containerColor = Color.Black,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            BottomBar(
-                destinations = appState.topDestinations,
-                onNavigateToDestination = appState::navigateToTopDestination,
-                currentDestination = appState.currentDestination,
-                modifier = Modifier.testTag("BottomBar")
-            )
+            if(appState.currentDestination.isTopDestinationInHierarchy(TopDestination.JOIN).not()){
+                BottomBar(
+                    destinations = appState.topDestinations,
+                    onNavigateToDestination = appState::navigateToTopDestination,
+                    currentDestination = appState.currentDestination,
+                    modifier = Modifier.testTag("BottomBar")
+                )
+            }
         }
     ) {
 
