@@ -1,6 +1,5 @@
-package com.appleroid.core.designsystem.component
+package com.appleroid.core.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding

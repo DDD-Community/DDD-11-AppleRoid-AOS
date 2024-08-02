@@ -28,6 +28,7 @@ fun WithTextCheckBox(
     modifier: Modifier = Modifier,
     isSelected : Boolean = false,
     text : String = "",
+    percentText: String = "",
     onSelected : (Boolean) -> Unit
 ){
     Box(
@@ -60,6 +61,17 @@ fun WithTextCheckBox(
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 12.dp)
             )
+
+            if (percentText.isNotBlank()) {
+                Spacer(modifier = Modifier.weight(1F))
+
+                Text(
+                    text = percentText,
+                    color = WHITE,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 8.dp, end = 16.dp)
+                )
+            }
         }
     }
 }

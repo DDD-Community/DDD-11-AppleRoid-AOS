@@ -13,3 +13,5 @@ val BTN_BACKGROUND = Color(0xFF212121)
 val DOT = Color(0xFF707070)
 val WHITE = Color(0xFFFFFFFF)
 val POINT01 = Color(0xFFFCBA66)
+
+val MBTI_ENFP = Color(0xFF386E5B)
