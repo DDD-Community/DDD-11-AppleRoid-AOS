@@ -25,7 +25,7 @@ fun TitleText(
         Text(
             text = title,
             color = WHITE,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.labelLarge,
             textAlign = textAlign,
             modifier = Modifier.align(alignment)
         )

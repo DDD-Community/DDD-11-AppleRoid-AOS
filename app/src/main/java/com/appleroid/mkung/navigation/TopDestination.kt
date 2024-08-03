@@ -3,12 +3,12 @@ package com.appleroid.mkung.navigation
 import com.appleroid.mkung.R
 
 enum class TopDestination(
-    val iconTextId : Int,
+    val iconTextId : Int?,
     val selectedIcon: Int,
     val unselectedIcon: Int
 ) {
     JOIN(
-        iconTextId = R.string.icon_text_join,
+        iconTextId = null,
         selectedIcon = R.drawable.ic_gnb_home_sel,
         unselectedIcon = R.drawable.ic_gnb_home_sel
     ),
