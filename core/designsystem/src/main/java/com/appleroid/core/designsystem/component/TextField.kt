@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,10 +36,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.appleroid.core.designsystem.component.theme.BTN_BACKGROUND
-import com.appleroid.core.designsystem.component.theme.GREY01
-import com.appleroid.core.designsystem.component.theme.POINT01
-import com.appleroid.core.designsystem.component.utils.toDp
+import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
+import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.utils.toDp
 import kotlin.math.roundToInt
 
 @Composable

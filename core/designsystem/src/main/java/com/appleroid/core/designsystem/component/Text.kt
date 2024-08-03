@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.appleroid.core.designsystem.component.theme.GREY01
-import com.appleroid.core.designsystem.component.theme.WHITE
+import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.WHITE
 
 @Composable
 fun TitleText(

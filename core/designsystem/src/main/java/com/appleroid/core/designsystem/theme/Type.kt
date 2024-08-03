@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.theme
+package com.appleroid.core.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.appleroid.core.designsystem.component.utils.textSp
+import com.appleroid.core.designsystem.utils.textSp
 
 @Composable
 fun mKungTypography() = Typography(

@@ -1,4 +1,4 @@
-package com.appleroid.core.designsystem.component.component
+package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,15 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.R
-import com.appleroid.core.designsystem.component.theme.GREY05
-import com.appleroid.core.designsystem.component.theme.POINT01
-import com.appleroid.core.designsystem.component.theme.WHITE
+import com.appleroid.core.designsystem.theme.GREY05
+import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.theme.WHITE
 
 @Composable
 fun WithTextCheckBox(
     modifier: Modifier = Modifier,
     isSelected : Boolean = false,
     text : String = "",
+    percentText: String = "",
     onSelected : (Boolean) -> Unit
 ){
     Box(
@@ -60,6 +61,17 @@ fun WithTextCheckBox(
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(start = 12.dp)
             )
+
+            if (percentText.isNotBlank()) {
+                Spacer(modifier = Modifier.weight(1F))
+
+                Text(
+                    text = percentText,
+                    color = WHITE,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(start = 8.dp, end = 16.dp)
+                )
+            }
         }
     }
 }

@@ -30,7 +30,6 @@
     <string name="verify_time_out">인증번호 유효시간이 지났어요. 다시 전송해주세요!</string>
     <string name="no_valid_verify_number">인증번호가 일치하지 않습니다. 다시 확인해주세요!</string>
 
-
     <string name="nickname_title">엠쿵에서 사용할 닉네임을\n입력해주세요</string>
     <string name="nickname_description">닉네임은 최대 10자까지 입력 가능해요.</string>
     <string name="nickname_label">닉네임</string>
