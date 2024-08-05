@@ -1,4 +1,4 @@
-package com.appleroid.core.model.data
+package com.appleroid.core.data.model
 
 data class FeedInfoDto (
     val nickName: String,
