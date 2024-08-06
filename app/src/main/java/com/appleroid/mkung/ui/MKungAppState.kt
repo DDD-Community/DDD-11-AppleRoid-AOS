@@ -76,7 +76,6 @@ class MKungAppState(
                 TopDestination.HOME -> navController.navigationToHomeGraph(topNavOptions)
                 TopDestination.ASK -> navController.navigationToAskGraph(topNavOptions)
                 TopDestination.MY_PAGE -> navController.navigationToMyPageGraph(topNavOptions)
-                TopDestination.JOIN -> navController.navigationToJoinGraph(topNavOptions)
             }
         }
     }
