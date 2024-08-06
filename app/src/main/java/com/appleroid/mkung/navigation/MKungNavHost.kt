@@ -23,10 +23,8 @@ fun MKungNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ){
-        joinGraph(joinCompleteClicked = {
-            navController.navigationToHomeGraph()
-        }) {}
-        homeGraph {}
+        joinGraph(joinCompleteClicked = navController::navigationToHomeGraph) {}
+        homeGraph { }
         askGraph{ }
         myPageGraph{ }
     }

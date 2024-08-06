@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.appleroid.core.designsystem.component.DottedDivider
 import com.appleroid.core.designsystem.component.ImageWithTextBtn
 import com.appleroid.core.designsystem.theme.BLACK
@@ -48,15 +49,20 @@ import com.appleroid.feature.home.model.FeedType
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeRoute() {
-    HomeScreen()
+fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
+    HomeScreen(
+        modifier = modifier
+    )
 }
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    //viewModel 구현 예정
+
     var myMbti by remember { mutableStateOf("ESTJ") }
 
     val scope = rememberCoroutineScope()
