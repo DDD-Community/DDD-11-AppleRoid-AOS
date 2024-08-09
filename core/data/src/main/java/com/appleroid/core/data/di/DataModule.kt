@@ -1,17 +1,22 @@
 package com.appleroid.core.data.di
 
-import com.appleroid.core.data.repository.FeedInfoListRepository
-import com.appleroid.core.data.repository.FeedRepository
+import android.content.Context
+import com.appleroid.core.data.ResourcesProvider
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
-    @Binds
-    internal abstract fun bindsFeedRepository(
-        feedInfoListRepository: FeedInfoListRepository,
-    ): FeedRepository
+object DataModule {
+    @Singleton
+    @Provides
+    fun provideResourcesProvider(@ApplicationContext context: Context): ResourcesProvider = ResourcesProvider(context)
+
+    @Provides
+    fun provideApplicationContext(@ApplicationContext context: Context): Context = context
 }
