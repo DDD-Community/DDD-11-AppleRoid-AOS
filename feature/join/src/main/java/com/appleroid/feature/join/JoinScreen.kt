@@ -89,7 +89,10 @@ fun JoinRoute(
     modifier: Modifier = Modifier,
     joinCompleteClicked: () -> Unit,
 ) {
-    JoinScreen(modifier, joinCompleteClicked)
+    JoinScreen(
+        modifier = modifier,
+        joinCompleteClicked = joinCompleteClicked
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -269,7 +272,7 @@ fun JoinScreen(
                     bottomSheetType = BottomSheetType.VERIFY
                     isShowBottomSheet = true
                 } else if (pagerState.currentPage == PagerType.MBTI.index) {
-                    joinCompleteClicked.invoke()
+                    joinCompleteClicked()
                 } else {
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }

@@ -45,7 +45,10 @@ fun MKungApp(
         containerColor = Color.Black,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            if(appState.currentDestination.isTopDestinationInHierarchy(TopDestination.JOIN).not()){
+            if(appState.currentDestination.isTopDestinationInHierarchy(TopDestination.HOME) ||
+                appState.currentDestination.isTopDestinationInHierarchy(TopDestination.ASK) ||
+                appState.currentDestination.isTopDestinationInHierarchy(TopDestination.MY_PAGE))
+            {
                 BottomBar(
                     destinations = appState.topDestinations,
                     onNavigateToDestination = appState::navigateToTopDestination,
