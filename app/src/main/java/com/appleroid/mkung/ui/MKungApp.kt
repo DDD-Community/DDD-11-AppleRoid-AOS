@@ -102,26 +102,28 @@ private fun BottomBar(
             containerColor = GREY06,
         ) {
             destinations.forEach { destination ->
-                val selected = currentDestination.isTopDestinationInHierarchy(destination)
-                NavigationBarItem(
-                    selected = selected,
-                    onClick = { onNavigateToDestination(destination) },
-                    icon = {
-                        Icon(
-                            painter = painterResource(destination.unselectedIcon),
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp)
-                        )
-                    },
-                    selectedIcon = {
-                        Icon(
-                            painter = painterResource(destination.selectedIcon),
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp)
-                        )
-                    },
-                    label = { Text(stringResource(destination.iconTextId)) }
-                )
+                destination.iconTextId?.let {
+                    val selected = currentDestination.isTopDestinationInHierarchy(destination)
+                    NavigationBarItem(
+                        selected = selected,
+                        onClick = { onNavigateToDestination(destination) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(destination.unselectedIcon),
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        },
+                        selectedIcon = {
+                            Icon(
+                                painter = painterResource(destination.selectedIcon),
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        },
+                        label = { Text(stringResource(destination.iconTextId)) }
+                    )
+                }
             }
         }
     }

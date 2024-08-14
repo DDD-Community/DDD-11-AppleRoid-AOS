@@ -1,6 +1,6 @@
 package com.appleroid.feature.join
 
-import android.view.ViewTreeObserver
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,29 +13,20 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,43 +35,36 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.appleroid.core.common.utils.isValidBirthDate
-import com.appleroid.core.common.utils.isValidKoreanName
-import com.appleroid.core.common.utils.isValidPhoneNumber
-import com.appleroid.core.common.utils.isValidResidentNumberFirstDigit
 import com.appleroid.core.designsystem.component.CheckTextField
 import com.appleroid.core.designsystem.component.DescriptionText
 import com.appleroid.core.designsystem.component.LabelText
 import com.appleroid.core.designsystem.component.MKungBtn
 import com.appleroid.core.designsystem.component.MKungTextField
+import com.appleroid.core.designsystem.component.MbtiCheckBox
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.TopAppBar
 import com.appleroid.core.designsystem.component.WithTextCheckBox
-import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY06
-import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.utils.PhoneNumberVisualTransformation
-import com.appleroid.core.designsystem.utils.isKorean
 import com.appleroid.core.designsystem.utils.keyboardAsState
+import com.appleroid.feature.join.model.MbtiType
 import com.appleroid.feature.join.model.BottomSheetType
 import com.appleroid.feature.join.model.CarrierType
+import com.appleroid.feature.join.model.ENERGY_DIRECTION
+import com.appleroid.feature.join.model.JUDGMENT
+import com.appleroid.feature.join.model.MbtiImage
 import com.appleroid.feature.join.model.PagerType
+import com.appleroid.feature.join.model.RECOGNIZE
 import com.appleroid.feature.join.model.TermType
 import kotlinx.coroutines.launch
 
@@ -112,12 +96,13 @@ fun JoinScreen(
     var selectedServiceTerm by remember { mutableStateOf(false) }
     var isShowBottomSheet by remember { mutableStateOf(false) }
     var bottomBtnEnable by remember { mutableStateOf(false) }
+    var selectedEnergyDirection by remember { mutableStateOf<MbtiType?>(null) }
+    var selectedRecognize by remember { mutableStateOf<MbtiType?>(null) }
+    var selectedJudgment by remember { mutableStateOf<MbtiType?>(null) }
+    var selectedPlanning by remember { mutableStateOf<MbtiType?>(null) }
 
     var selectedCarrier by remember { mutableStateOf<CarrierType?>(null) }
     var phoneNumber by remember { mutableStateOf("") }
-    var registrationNumber by remember { mutableStateOf("") }
-    var registrationSecondNumber by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
     var bottomSheetType by remember { mutableStateOf(BottomSheetType.CARRIER) }
 
     var nickname by remember { mutableStateOf("") }
@@ -127,7 +112,7 @@ fun JoinScreen(
     }
 
     LaunchedEffect(isKeyboardOpen) {
-        if(isKeyboardOpen.not()){
+        if (isKeyboardOpen.not()) {
             focusManager.clearFocus()
         }
     }
@@ -160,14 +145,11 @@ fun JoinScreen(
         pagerState.currentPage,
         selectedAllTerm,
         phoneNumber,
-        registrationNumber,
-        registrationSecondNumber,
-        name,
         selectedCarrier
-    ){
-        bottomBtnEnable = when(pagerState.currentPage){
-            PagerType.TERM_AGREE.index -> true
+    ) {
+        bottomBtnEnable = when (pagerState.currentPage) {
             PagerType.PHONE_VERIFY.index -> true
+            PagerType.TERM_AGREE.index -> true
             PagerType.NICKNAME.index -> true
             else -> true
         }
@@ -186,7 +168,7 @@ fun JoinScreen(
 
             TopAppBar(
                 title = stringResource(
-                    when(pagerState.currentPage){
+                    when (pagerState.currentPage) {
                         PagerType.TERM_AGREE.index -> PagerType.TERM_AGREE.titleRes
                         PagerType.PHONE_VERIFY.index -> PagerType.PHONE_VERIFY.titleRes
                         PagerType.NICKNAME.index -> PagerType.NICKNAME.titleRes
@@ -197,58 +179,95 @@ fun JoinScreen(
 
             HorizontalPager(
                 state = pagerState,
-                userScrollEnabled = false
-            ){
-                when(it){
-                    PagerType.TERM_AGREE.index -> {
-                        TermScreen(
-                            selectedAllTerm = selectedAllTerm,
-                            selectedPrivacyTerm = selectedPrivacyTerm,
-                            selectedServiceTerm = selectedServiceTerm,
-                            onChangedSelectAllTerm = { newValue ->
-                                selectedAllTerm = newValue
-                                selectedPrivacyTerm = newValue
-                                selectedServiceTerm = newValue
-                            },
-                            onChangedSelectPrivacyTerm = { newValue ->
-                                selectedPrivacyTerm = newValue
-                                allAgreeCheck()
-                            },
-                            onChangedSelectServiceTerm = { newValue ->
-                                selectedServiceTerm = newValue
-                                allAgreeCheck()
-                            }
-                        )
-                    }
-                    PagerType.PHONE_VERIFY.index -> {
-                        PhoneVerifyScreen(
-                            selectedCarrier = selectedCarrier,
-                            phoneNumber = phoneNumber,
-                            registrationNumber = registrationNumber,
-                            registrationSecondNumber = registrationSecondNumber,
-                            name = name,
-                            onChangedPhoneNumber = { newValue -> phoneNumber = newValue },
-                            onChangedRegistrationNumber = { newValue -> registrationNumber = newValue },
-                            onChangedRegistrationSecondNumber = { newValue -> registrationSecondNumber = newValue },
-                            onChangedName = { newValue -> name = newValue },
-                            onClickCarrier = {
-                                bottomSheetType = BottomSheetType.CARRIER
-                                isShowBottomSheet = true
-                            }
-                        )
-                    }
-                    PagerType.NICKNAME.index -> {
-                        NicknameScreen(
-                            nickname = nickname,
-                            onChangeNickname = { newValue -> nickname = newValue }
-                        )
-                    }
-                    else -> {
+                userScrollEnabled = false,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    when (it) {
+                        PagerType.PHONE_VERIFY.index -> {
+                            PhoneVerifyScreen(
+                                modifier = Modifier.align(Alignment.TopCenter),
+                                selectedCarrier = selectedCarrier,
+                                phoneNumber = phoneNumber,
+                                onChangedPhoneNumber = { newValue -> phoneNumber = newValue },
+                                onClickCarrier = {
+                                    bottomSheetType = BottomSheetType.CARRIER
+                                    isShowBottomSheet = true
+                                }
+                            )
+                        }
 
+                        PagerType.TERM_AGREE.index -> {
+                            TermScreen(
+                                modifier = Modifier.align(Alignment.TopCenter),
+                                selectedAllTerm = selectedAllTerm,
+                                selectedPrivacyTerm = selectedPrivacyTerm,
+                                selectedServiceTerm = selectedServiceTerm,
+                                onChangedSelectAllTerm = { newValue ->
+                                    selectedAllTerm = newValue
+                                    selectedPrivacyTerm = newValue
+                                    selectedServiceTerm = newValue
+                                },
+                                onChangedSelectPrivacyTerm = { newValue ->
+                                    selectedPrivacyTerm = newValue
+                                    allAgreeCheck()
+                                },
+                                onChangedSelectServiceTerm = { newValue ->
+                                    selectedServiceTerm = newValue
+                                    allAgreeCheck()
+                                }
+                            )
+                        }
+
+                        PagerType.NICKNAME.index -> {
+                            NicknameScreen(
+                                modifier = Modifier.align(Alignment.TopCenter),
+                                nickname = nickname,
+                                onChangeNickname = { newValue -> nickname = newValue }
+                            )
+                        }
+
+                        else -> {
+                            MbtiScreen(
+                                modifier = Modifier.align(Alignment.TopCenter),
+                                selectedEnergyDirection = selectedEnergyDirection,
+                                selectedJudgment = selectedJudgment,
+                                selectedRecognize = selectedRecognize,
+                                selectedPlanning = selectedPlanning,
+                                onClick = { mbti ->
+                                    when (mbti.type) {
+                                        ENERGY_DIRECTION -> selectedEnergyDirection = mbti
+                                        RECOGNIZE -> selectedRecognize = mbti
+                                        JUDGMENT -> selectedJudgment = mbti
+                                        else -> selectedPlanning = mbti
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
+
+        if (
+            selectedEnergyDirection != null
+            && selectedRecognize != null
+            && selectedJudgment != null
+            && selectedPlanning != null
+        ){
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(394.dp)
+                    .align(Alignment.TopCenter),
+                painter = painterResource(R.drawable.img_mbti_selected),
+                contentDescription = "img_mbti_selected",
+                contentScale = ContentScale.FillBounds
+            )
+        }
+
 
         MKungBtn(
             modifier = Modifier
@@ -259,7 +278,7 @@ fun JoinScreen(
                 .padding(bottom = 20.dp),
             enable = bottomBtnEnable,
             text = stringResource(
-                when(pagerState.currentPage){
+                when (pagerState.currentPage) {
                     PagerType.TERM_AGREE.index -> PagerType.TERM_AGREE.bottomBtnRes
                     PagerType.PHONE_VERIFY.index -> PagerType.PHONE_VERIFY.bottomBtnRes
                     PagerType.NICKNAME.index -> PagerType.NICKNAME.bottomBtnRes
@@ -268,31 +287,38 @@ fun JoinScreen(
             ),
         ) {
             scope.launch {
-                if (pagerState.currentPage == PagerType.PHONE_VERIFY.index){
-                    bottomSheetType = BottomSheetType.VERIFY
-                    isShowBottomSheet = true
-                } else if (pagerState.currentPage == PagerType.MBTI.index) {
-                    joinCompleteClicked()
-                } else {
-                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                when (pagerState.currentPage) {
+                    PagerType.PHONE_VERIFY.index -> {
+                        bottomSheetType = BottomSheetType.VERIFY
+                        isShowBottomSheet = true
+                    }
+                    PagerType.MBTI.index -> {
+                        joinCompleteClicked.invoke()
+                    }
+                    else -> {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
                 }
             }
         }
     }
 
-    if(isShowBottomSheet){
+    if (isShowBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { isShowBottomSheet = false },
             sheetState = bottomSheetState,
             containerColor = GREY06,
             dragHandle = null
-        ){
-            when(bottomSheetType){
+        ) {
+            when (bottomSheetType) {
                 BottomSheetType.CARRIER -> {
-                    CarrierScreen{
-                        selectedCarrier = it
-                        isShowBottomSheet = false
-                    }
+                    CarrierScreen(
+                        onClickCarrier = {
+                            selectedCarrier = it
+                            isShowBottomSheet = false
+                        },
+                        onClose = { isShowBottomSheet = false }
+                    )
                 }
 
                 BottomSheetType.VERIFY -> {
@@ -369,23 +395,11 @@ fun TermScreen(
 @Composable
 fun PhoneVerifyScreen(
     modifier: Modifier = Modifier,
-    selectedCarrier : CarrierType?,
-    phoneNumber : String,
-    registrationNumber : String,
-    registrationSecondNumber : String,
-    name : String,
-    onChangedPhoneNumber : (String) -> Unit,
-    onChangedRegistrationNumber : (String) -> Unit,
-    onChangedRegistrationSecondNumber : (String) -> Unit,
-    onChangedName : (String) -> Unit,
-    onClickCarrier : () -> Unit
-){
-
-    val focusRequesterPhone = remember { FocusRequester() }
-    val focusRequesterRegistration = remember { FocusRequester() }
-    val focusRequesterRegistrationSecond = remember { FocusRequester() }
-    val focusRequesterName = remember { FocusRequester() }
-
+    selectedCarrier: CarrierType?,
+    phoneNumber: String,
+    onChangedPhoneNumber: (String) -> Unit,
+    onClickCarrier: () -> Unit
+) {
 
     Column(
         modifier = modifier
@@ -417,19 +431,19 @@ fun PhoneVerifyScreen(
                     color = GREY04,
                     shape = RoundedCornerShape(12.dp)
                 )
-        ){
+        ) {
             Spacer(modifier = Modifier.height(6.dp))
 
             PhoneVerifyInput(
                 title = stringResource(R.string.phone_number),
                 inputContent = {
-                    Row{
+                    Row {
                         LabelText(
                             modifier = Modifier
                                 .height(27.dp)
                                 .align(Alignment.CenterVertically)
                                 .clickable { onClickCarrier() },
-                            text = stringResource(selectedCarrier?.stringRes?:R.string.carrier),
+                            text = stringResource(selectedCarrier?.stringRes ?: R.string.carrier),
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.White
                         )
@@ -451,91 +465,89 @@ fun PhoneVerifyScreen(
                             placeholder = stringResource(R.string.phone_number_placeholder),
                             placeholderColor = GREY01,
                             visualTransformation = PhoneNumberVisualTransformation(),
-                            focusRequester = focusRequesterPhone,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                             text = phoneNumber,
                             onChangedText = {
-                                if(it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
-                                if(it.length == 11) focusRequesterRegistration.requestFocus()
-                                if(it.length < 12) onChangedPhoneNumber(it)
+                                if (it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
+                                if (it.length < 12) onChangedPhoneNumber(it)
                             }
                         )
                     }
                 }
             )
 
-            PhoneVerifyInput(
-                title = stringResource(R.string.registration_number),
-                inputContent = {
-                    Row{
-                        MKungTextField(
-                            modifier = Modifier
-                                .height(27.dp)
-                                .align(Alignment.CenterVertically),
-                            textStyle = MaterialTheme.typography.labelLarge,
-                            placeholder = stringResource(R.string.registration_number_placeholder),
-                            placeholderColor = GREY01,
-                            isLimitWidth = true,
-                            focusRequester = focusRequesterRegistration,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            text = registrationNumber,
-                            onChangedText = {
-                                if(it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
-                                if(it.length == 6) focusRequesterRegistrationSecond.requestFocus()
-                                if(it.length < 7) onChangedRegistrationNumber(it)
-                            }
-                        )
-
-                        LabelText(
-                            modifier = Modifier.padding(horizontal = 3.dp),
-                            text = stringResource(R.string.bar),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = Color.White
-                        )
-
-                        MKungTextField(
-                            modifier = Modifier
-                                .height(27.dp)
-                                .align(Alignment.CenterVertically),
-                            textStyle = MaterialTheme.typography.labelLarge,
-                            placeholder = stringResource(R.string.registration_number_second_placeholder),
-                            placeholderColor = GREY01,
-                            isLimitWidth = true,
-                            focusRequester = focusRequesterRegistrationSecond,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            text = registrationSecondNumber,
-                            onChangedText = {
-                                if(it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
-                                if(it.length == 1) focusRequesterName.requestFocus()
-                                if(it.length < 2) onChangedRegistrationSecondNumber(it)
-                            }
-                        )
-
-                        repeat(6){
-                            Dot(modifier = Modifier.align(Alignment.CenterVertically))
-                        }
-                    }
-                }
-            )
-
-            PhoneVerifyInput(
-                title = stringResource(R.string.name),
-                inputContent = {
-                    MKungTextField(
-                        modifier = Modifier
-                            .height(27.dp),
-                        textStyle = MaterialTheme.typography.labelLarge,
-                        placeholder = stringResource(R.string.name_placeholder),
-                        placeholderColor = GREY01,
-                        focusRequester = focusRequesterName,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        text = name,
-                        onChangedText = {
-                            if(it.length < 8 && it.all { text -> text.isKorean() }) onChangedName(it)
-                        }
-                    )
-                }
-            )
+//            PhoneVerifyInput(
+//                title = stringResource(R.string.registration_number),
+//                inputContent = {
+//                    Row{
+//                        MKungTextField(
+//                            modifier = Modifier
+//                                .height(27.dp)
+//                                .align(Alignment.CenterVertically),
+//                            textStyle = MaterialTheme.typography.labelLarge,
+//                            placeholder = stringResource(R.string.registration_number_placeholder),
+//                            placeholderColor = GREY01,
+//                            isLimitWidth = true,
+//                            focusRequester = focusRequesterRegistration,
+//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+//                            text = registrationNumber,
+//                            onChangedText = {
+//                                if(it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
+//                                if(it.length == 6) focusRequesterRegistrationSecond.requestFocus()
+//                                if(it.length < 7) onChangedRegistrationNumber(it)
+//                            }
+//                        )
+//
+//                        LabelText(
+//                            modifier = Modifier.padding(horizontal = 3.dp),
+//                            text = stringResource(R.string.bar),
+//                            style = MaterialTheme.typography.labelLarge,
+//                            color = Color.White
+//                        )
+//
+//                        MKungTextField(
+//                            modifier = Modifier
+//                                .height(27.dp)
+//                                .align(Alignment.CenterVertically),
+//                            textStyle = MaterialTheme.typography.labelLarge,
+//                            placeholder = stringResource(R.string.registration_number_second_placeholder),
+//                            placeholderColor = GREY01,
+//                            isLimitWidth = true,
+//                            focusRequester = focusRequesterRegistrationSecond,
+//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+//                            text = registrationSecondNumber,
+//                            onChangedText = {
+//                                if(it.isNotEmpty() && it.toIntOrNull() == null) return@MKungTextField
+//                                if(it.length == 1) focusRequesterName.requestFocus()
+//                                if(it.length < 2) onChangedRegistrationSecondNumber(it)
+//                            }
+//                        )
+//
+//                        repeat(6){
+//                            Dot(modifier = Modifier.align(Alignment.CenterVertically))
+//                        }
+//                    }
+//                }
+//            )
+//
+//            PhoneVerifyInput(
+//                title = stringResource(R.string.name),
+//                inputContent = {
+//                    MKungTextField(
+//                        modifier = Modifier
+//                            .height(27.dp),
+//                        textStyle = MaterialTheme.typography.labelLarge,
+//                        placeholder = stringResource(R.string.name_placeholder),
+//                        placeholderColor = GREY01,
+//                        focusRequester = focusRequesterName,
+//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+//                        text = name,
+//                        onChangedText = {
+//                            if(it.length < 8 && it.all { text -> text.isKorean() }) onChangedName(it)
+//                        }
+//                    )
+//                }
+//            )
         }
     }
 }
@@ -543,9 +555,9 @@ fun PhoneVerifyScreen(
 @Composable
 fun NicknameScreen(
     modifier: Modifier = Modifier,
-    nickname : String,
-    onChangeNickname : (String) -> Unit
-){
+    nickname: String,
+    onChangeNickname: (String) -> Unit
+) {
     Column(
         modifier = modifier.padding(horizontal = 24.dp)
     ) {
@@ -570,7 +582,7 @@ fun NicknameScreen(
         CheckTextField(
             text = nickname,
             onChangeText = {
-                if(it.length < 11) onChangeNickname(it)
+                if (it.length < 11) onChangeNickname(it)
             },
             label = stringResource(R.string.nickname_label),
             btnImageRes = R.drawable.ic_valid
@@ -579,16 +591,132 @@ fun NicknameScreen(
 }
 
 @Composable
+fun MbtiScreen(
+    modifier: Modifier = Modifier,
+    selectedEnergyDirection: MbtiType?,
+    selectedRecognize: MbtiType?,
+    selectedJudgment: MbtiType?,
+    selectedPlanning: MbtiType?,
+    onClick: (MbtiType) -> Unit
+) {
+
+    val isAllChecked = selectedEnergyDirection != null
+            && selectedRecognize != null
+            && selectedJudgment != null
+            && selectedPlanning != null
+
+    Column(
+        modifier = modifier
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+        TitleText(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(59.dp),
+            alignment = Alignment.TopCenter,
+            title = stringResource(R.string.mbti_title)
+        )
+
+        DescriptionText(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(21.dp),
+            title = stringResource(R.string.mbti_description),
+            alignment = Alignment.TopCenter
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(234.dp)
+        ) {
+            if (isAllChecked) {
+                Image(
+                    painter = painterResource(R.drawable.img_mbti_background),
+                    contentDescription = "mbti_background",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
+            Image(
+                painter = if (isAllChecked) {
+                    val mbtiText = selectedEnergyDirection?.key + selectedRecognize?.key + selectedJudgment?.key + selectedPlanning?.key
+                    painterResource(MbtiImage.valueOf(mbtiText).drawableRes)
+                }else painterResource(R.drawable.img_empty_mbti),
+                contentDescription = "mbti_image",
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+
+        Spacer(modifier = Modifier.height(11.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            repeat(4) {
+                MbtiList(
+                    modifier = Modifier.weight(1f),
+                    itemList = when (it) {
+                        ENERGY_DIRECTION -> listOf(MbtiType.E, MbtiType.I)
+                        RECOGNIZE -> listOf(MbtiType.S, MbtiType.N)
+                        JUDGMENT -> listOf(MbtiType.T, MbtiType.F)
+                        else -> listOf(MbtiType.J, MbtiType.P)
+                    },
+                    selectedMbti = when (it) {
+                        ENERGY_DIRECTION -> selectedEnergyDirection
+                        RECOGNIZE -> selectedRecognize
+                        JUDGMENT -> selectedJudgment
+                        else -> selectedPlanning
+                    },
+                    onClick = { mbti ->
+                        onClick(mbti)
+                    }
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+fun MbtiList(
+    modifier: Modifier = Modifier,
+    itemList: List<MbtiType>,
+    selectedMbti: MbtiType?,
+    onClick: (MbtiType) -> Unit
+) {
+    Column(
+        modifier = modifier
+    ) {
+        itemList.forEach {
+            val isChecked = it == selectedMbti
+            MbtiCheckBox(
+                key = it.key,
+                text = stringResource(it.stringRes),
+                painter = painterResource(it.drawableRes),
+                isChecked = isChecked,
+                onClick = { key ->
+                    onClick(MbtiType.valueOf(key))
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
 fun PhoneVerifyInput(
     modifier: Modifier = Modifier,
-    title : String,
-    showBottomLine : Boolean = true,
-    inputContent : @Composable () -> Unit
-){
+    title: String,
+    inputContent: @Composable () -> Unit
+) {
 
     Column(
         modifier = modifier.padding(horizontal = 24.dp)
-    ){
+    ) {
         Spacer(modifier = Modifier.height(11.dp))
 
         LabelText(
@@ -601,16 +729,7 @@ fun PhoneVerifyInput(
 
         inputContent()
 
-        Spacer(modifier = Modifier.height(13.dp))
-
-        if(showBottomLine){
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GREY04)
-            )
-        }
+        Spacer(modifier = Modifier.height(21.dp))
     }
 
 }
@@ -618,44 +737,67 @@ fun PhoneVerifyInput(
 @Composable
 fun CarrierScreen(
     modifier: Modifier = Modifier,
-    onClickCarrier: (CarrierType) -> Unit
-){
+    onClickCarrier: (CarrierType) -> Unit,
+    onClose: () -> Unit
+) {
     val list = CarrierType.entries
 
-    list.forEach {
+    Box(
+        modifier = modifier
+    ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 24.dp)
-                .clickable { onClickCarrier(it) }
-        ){
+                .align(Alignment.TopCenter)
+        ) {
+            Spacer(modifier = Modifier.height(15.dp))
             LabelText(
                 modifier = Modifier
-                    .height(60.dp)
+                    .height(64.dp)
                     .align(Alignment.Start),
-                text = stringResource(it.stringRes),
+                text = stringResource(R.string.carrier_title),
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White
             )
+            Spacer(modifier = Modifier.height(13.dp))
+            list.forEach {
+                LabelText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(24.dp)
+                        .align(Alignment.Start)
+                        .clickable { onClickCarrier(it) },
+                    text = stringResource(it.stringRes),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = GREY01
+                )
 
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GREY04)
-            )
+                Spacer(modifier = Modifier.height(25.dp))
+            }
         }
+
+        Image(
+            painter = painterResource(R.drawable.ic_close),
+            contentDescription = "close",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp)
+                .padding(end = 16.dp)
+                .clickable { onClose() }
+        )
     }
 }
 
 @Composable
 fun VerifyScreen(
     modifier: Modifier = Modifier,
-    onClose : () -> Unit,
-    onComplete : () -> Unit
-){
+    onClose: () -> Unit,
+    onComplete: () -> Unit
+) {
     var verifyNumber by remember { mutableStateOf("") }
 
-    Box(modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp)){
+    Box(modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Spacer(modifier = Modifier.height(25.dp))
             TitleText(
@@ -668,9 +810,9 @@ fun VerifyScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 text = verifyNumber,
                 onChangeText = {
-                    if(it.isNotEmpty() && it.toIntOrNull() == null) return@CheckTextField
-                    if(it.length < 7) verifyNumber = it
-                    if(it.length == 6) onComplete()
+                    if (it.isNotEmpty() && it.toIntOrNull() == null) return@CheckTextField
+                    if (it.length < 7) verifyNumber = it
+                    if (it.length == 6) onComplete()
                 },
                 label = stringResource(R.string.verify_number),
                 btnImageRes = R.drawable.ic_resend,
@@ -694,8 +836,8 @@ fun VerifyScreen(
 @Composable
 fun Dot(
     modifier: Modifier = Modifier
-){
-    Row(modifier = modifier){
+) {
+    Row(modifier = modifier) {
         Canvas(modifier = Modifier.size(5.dp)) {
             drawCircle(color = DOT, radius = 2.5.dp.toPx())
         }

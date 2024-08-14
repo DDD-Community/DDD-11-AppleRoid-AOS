@@ -54,4 +54,11 @@ fun mKungTypography() = Typography(
         lineHeight = 16.dp.textSp,
         letterSpacing = 0.dp.textSp
     ),
+    displaySmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.dp.textSp,
+        lineHeight = 12.dp.textSp,
+        letterSpacing = 0.dp.textSp
+    )
 )

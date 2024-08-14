@@ -4,7 +4,10 @@ import androidx.annotation.StringRes
 import com.appleroid.feature.join.R
 
 enum class CarrierType(@StringRes val stringRes : Int) {
-    KT(R.string.kt),
     SKT(R.string.skt),
-    LG(R.string.lg)
+    KT(R.string.kt),
+    LG(R.string.lg),
+    SKT_BUDGET(R.string.skt_budget),
+    KT_BUDGET(R.string.kt_budget),
+    LG_BUDGET(R.string.lg_budget)
 }

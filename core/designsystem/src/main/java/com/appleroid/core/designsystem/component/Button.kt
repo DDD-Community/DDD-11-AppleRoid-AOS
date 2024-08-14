@@ -26,8 +26,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.appleroid.core.designsystem.theme.BLACK
 import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
+import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
 
@@ -41,12 +44,7 @@ fun MKungBtn(
     TextButton(
         modifier = modifier
             .background(
-                color = BTN_BACKGROUND,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = if(enable) POINT01 else BTN_BACKGROUND,
+                color = if(enable) POINT01 else GREY05,
                 shape = RoundedCornerShape(12.dp)
             ),
         enabled = enable,
@@ -55,7 +53,7 @@ fun MKungBtn(
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleSmall,
-                color = if(enable) POINT01 else GREY01
+                color = if(enable) BLACK else DOT
             )
         }
     )
