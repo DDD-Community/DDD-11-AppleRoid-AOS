@@ -73,7 +73,10 @@ fun JoinRoute(
     modifier: Modifier = Modifier,
     joinCompleteClicked: () -> Unit,
 ) {
-    JoinScreen(modifier, joinCompleteClicked)
+    JoinScreen(
+        modifier = modifier,
+        joinCompleteClicked = joinCompleteClicked
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
