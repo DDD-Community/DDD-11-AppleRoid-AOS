@@ -1,5 +1,6 @@
 package com.appleroid.feature.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,11 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.appleroid.core.designsystem.component.EmptyContent
 import com.appleroid.core.ui.FeedCard
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.feature.home.model.FeedType
-import com.appleroid.model.FeedButtonItem
-import com.appleroid.model.FeedCardResources
 import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
 import kotlinx.coroutines.CoroutineScope
@@ -155,23 +155,36 @@ fun QuestionScreen(
     feedInfoItems: List<FeedInfoItem>,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 20.dp, end = 20.dp),
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        items(feedInfoItems, key = { it.id }) { item ->
-            val (buttonOneSelected, onButtonOneSelectedChange) = remember { mutableStateOf(false) }
-            val (buttonTwoSelected, onButtonTwoSelectedChange) = remember { mutableStateOf(false) }
+        Crossfade(
+            targetState = feedInfoItems.isEmpty(),
+            label = "content empty"
+        ) { isEmpty ->
+            if (isEmpty) EmptyContent(title = stringResource(R.string.content_empty))
+            else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 20.dp, end = 20.dp),
+                ) {
+                    items(feedInfoItems, key = { it.id }) { item ->
+                        val (buttonOneSelected, onButtonOneSelectedChange) = remember { mutableStateOf(false) }
+                        val (buttonTwoSelected, onButtonTwoSelectedChange) = remember { mutableStateOf(false) }
 
-            FeedCard(
-                feedInfoItem = item,
-                buttonOneSelected = buttonOneSelected,
-                onButtonOneSelectedChange = onButtonOneSelectedChange,
-                buttonTwoSelected = buttonTwoSelected,
-                onButtonTwoSelectedChange = onButtonTwoSelectedChange,
-                modifier = modifier
-            )
+                        FeedCard(
+                            feedInfoItem = item,
+                            buttonOneSelected = buttonOneSelected,
+                            onButtonOneSelectedChange = onButtonOneSelectedChange,
+                            buttonTwoSelected = buttonTwoSelected,
+                            onButtonTwoSelectedChange = onButtonTwoSelectedChange,
+                            modifier = modifier
+                        )
+                    }
+                }
+            }
         }
     }
 }
