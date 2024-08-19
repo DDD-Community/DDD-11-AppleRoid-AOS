@@ -56,8 +56,7 @@ fun HomeRoute(
         onScreenWidthChanged = viewModel::setScreenWidthChanged,
         coroutineScope = rememberCoroutineScope(),
         pagerState = rememberPagerState { 2 },
-        feedInfo = viewModel.getFeedInfoItems(),
-        feedCardResources = viewModel.getFeedCardResources()
+        feedInfo = viewModel.getFeedInfoItems()
     )
 }
 
@@ -66,7 +65,6 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     halfScreenWidth: Dp,
     feedInfo: FeedInfo,
-    feedCardResources: FeedCardResources,
     onScreenWidthChanged: (Dp) -> Unit,
     coroutineScope: CoroutineScope,
     pagerState: PagerState,
@@ -96,7 +94,6 @@ fun HomeScreen(
             )
             ContentPager(
                 feedInfoItems = feedInfo.feedInfoItems,
-                feedCardResources = feedCardResources,
                 pagerState = pagerState
             )
         }
@@ -136,7 +133,6 @@ fun TopBar(
 @Composable
 fun ContentPager(
     feedInfoItems: List<FeedInfoItem>,
-    feedCardResources: FeedCardResources,
     pagerState: PagerState
 ) {
     HorizontalPager(
@@ -145,10 +141,7 @@ fun ContentPager(
     ) { page ->
         when (page) {
             FeedType.QUESTION.index -> {
-                QuestionScreen(
-                    feedInfoItems = feedInfoItems,
-                    feedCardResources = feedCardResources
-                )
+                QuestionScreen(feedInfoItems = feedInfoItems)
             }
             FeedType.MY_MBTI.index -> {
                 MyMbtiScreen()
@@ -160,7 +153,6 @@ fun ContentPager(
 @Composable
 fun QuestionScreen(
     feedInfoItems: List<FeedInfoItem>,
-    feedCardResources: FeedCardResources,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -174,7 +166,6 @@ fun QuestionScreen(
 
             FeedCard(
                 feedInfoItem = item,
-                feedCardResources = feedCardResources,
                 buttonOneSelected = buttonOneSelected,
                 onButtonOneSelectedChange = onButtonOneSelectedChange,
                 buttonTwoSelected = buttonTwoSelected,

@@ -7,11 +7,6 @@ enum class TopDestination(
     val selectedIcon: Int,
     val unselectedIcon: Int
 ) {
-    JOIN(
-        iconTextId = null,
-        selectedIcon = R.drawable.ic_gnb_home_sel,
-        unselectedIcon = R.drawable.ic_gnb_home_sel
-    ),
     HOME(
         iconTextId = R.string.icon_text_home,
         selectedIcon = R.drawable.ic_gnb_home_sel,

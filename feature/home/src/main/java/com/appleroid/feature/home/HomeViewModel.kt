@@ -1,14 +1,11 @@
 package com.appleroid.feature.home
 
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.appleroid.core.data.ResourcesProvider
 import com.appleroid.model.FeedButtonItem
-import com.appleroid.model.FeedCardResources
 import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val resourcesProvider: ResourcesProvider
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     // 화면 너비의 절반 값을 저장
@@ -78,20 +74,6 @@ class HomeViewModel @Inject constructor(
                     )
                 )
             )
-        )
-    }
-
-    fun getFeedCardResources(): FeedCardResources {
-        return FeedCardResources(
-            moreImageRes = resourcesProvider.getDrawableId(R.drawable.ic_home_contents_more),
-            eclipseStartImageRes = resourcesProvider.getDrawableId(R.drawable.ic_eclipse_start),
-            eclipseEndImageRes = resourcesProvider.getDrawableId(R.drawable.ic_eclipse_end),
-            plusImageRes = resourcesProvider.getDrawableId(R.drawable.ic_plus),
-            likeImageRes = resourcesProvider.getDrawableId(R.drawable.ic_like),
-            unLikeImageRes = resourcesProvider.getDrawableId(R.drawable.ic_un_like),
-            commentImageRes = resourcesProvider.getDrawableId(R.drawable.ic_comment),
-            voteImageRes = resourcesProvider.getDrawableId(R.drawable.ic_vote),
-            mbtiStringRes = resourcesProvider.getString(R.string.mbti_result)
         )
     }
 }

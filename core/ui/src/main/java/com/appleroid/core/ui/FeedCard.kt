@@ -22,7 +22,6 @@ import com.appleroid.model.FeedInfoItem
 @Composable
 fun FeedCard(
     feedInfoItem: FeedInfoItem,
-    feedCardResources: FeedCardResources,
     buttonOneSelected: Boolean,
     onButtonOneSelectedChange: (Boolean) -> Unit,
     buttonTwoSelected: Boolean,
@@ -44,7 +43,7 @@ fun FeedCard(
                 nickName = feedInfoItem.nickName,
                 mbti = feedInfoItem.mbti,
                 time = feedInfoItem.time,
-                moreImageRes = feedCardResources.moreImageRes
+                moreImageRes = R.drawable.ic_home_contents_more
             )
 
             Box(
@@ -61,14 +60,14 @@ fun FeedCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
-                        painter = painterResource(feedCardResources.eclipseStartImageRes),
+                        painter = painterResource(R.drawable.ic_eclipse_start),
                         contentDescription = "eclipse start image"
                     )
 
                     Spacer(modifier.weight(1F))
 
                     Image(
-                        painter = painterResource(feedCardResources.eclipseEndImageRes),
+                        painter = painterResource(R.drawable.ic_eclipse_end),
                         contentDescription = "eclipse end image"
                     )
                 }
@@ -76,12 +75,12 @@ fun FeedCard(
 
             FeedContent(
                 feedInfoItem = feedInfoItem,
-                plusImageRes = feedCardResources.plusImageRes,
-                likeImageRes = feedCardResources.likeImageRes,
-                unLikeImageRes = feedCardResources.unLikeImageRes,
-                commentImageRes = feedCardResources.commentImageRes,
-                voteImageRes = feedCardResources.voteImageRes,
-                mbtiStringRes = feedCardResources.mbtiStringRes,
+                plusImageRes = R.drawable.ic_plus,
+                likeImageRes = R.drawable.ic_like,
+                unLikeImageRes = R.drawable.ic_un_like,
+                commentImageRes = R.drawable.ic_comment,
+                voteImageRes = R.drawable.ic_vote,
+                mbtiStringRes = stringResource(R.string.feature_home_feed_mbti_result),
                 buttonOneSelected = buttonOneSelected,
                 onChangedOneSelectButton = onButtonOneSelectedChange,
                 buttonTwoSelected = buttonTwoSelected,
