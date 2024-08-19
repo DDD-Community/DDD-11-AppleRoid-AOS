@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.component.*
 import com.appleroid.core.designsystem.theme.*
+import com.appleroid.core.designsystem.utils.toCommaString
 import com.appleroid.model.FeedButtonItem
 import com.appleroid.model.FeedCardResources
 import com.appleroid.model.FeedInfo
@@ -75,12 +76,6 @@ fun FeedCard(
 
             FeedContent(
                 feedInfoItem = feedInfoItem,
-                plusImageRes = R.drawable.ic_plus,
-                likeImageRes = R.drawable.ic_like,
-                unLikeImageRes = R.drawable.ic_un_like,
-                commentImageRes = R.drawable.ic_comment,
-                voteImageRes = R.drawable.ic_vote,
-                mbtiStringRes = stringResource(R.string.feature_home_feed_mbti_result),
                 buttonOneSelected = buttonOneSelected,
                 onChangedOneSelectButton = onButtonOneSelectedChange,
                 buttonTwoSelected = buttonTwoSelected,
@@ -93,12 +88,6 @@ fun FeedCard(
 @Composable
 fun FeedContent(
     feedInfoItem: FeedInfoItem,
-    plusImageRes: Int,
-    likeImageRes: Int,
-    unLikeImageRes: Int,
-    commentImageRes: Int,
-    voteImageRes: Int,
-    mbtiStringRes: String,
     buttonOneSelected: Boolean,
     onChangedOneSelectButton: (Boolean) -> Unit,
     buttonTwoSelected: Boolean,
@@ -147,9 +136,9 @@ fun FeedContent(
 
             ImageWithTextBtn(
                 modifier = modifier,
-                selectedImageRes = plusImageRes,
-                unselectedImageRes = plusImageRes,
-                text = mbtiStringRes,
+                selectedImageRes = R.drawable.ic_plus,
+                unselectedImageRes = R.drawable.ic_plus,
+                text = stringResource(R.string.feature_home_feed_mbti_result),
                 interval = 2.dp,
                 arrangement = Arrangement.End,
                 onClick = {
@@ -169,9 +158,9 @@ fun FeedContent(
             Row(modifier = Modifier.padding(top = 16.dp)) {
                 ImageWithTextBtn(
                     modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = likeImageRes,
-                    unselectedImageRes = unLikeImageRes,
-                    text = "145",
+                    selectedImageRes = R.drawable.ic_like,
+                    unselectedImageRes = R.drawable.ic_un_like,
+                    text = "2145".toCommaString(),
                     interval = 8.dp,
                     arrangement = Arrangement.Start,
                     onClick = {
@@ -181,9 +170,9 @@ fun FeedContent(
 
                 ImageWithTextBtn(
                     modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = commentImageRes,
-                    unselectedImageRes = commentImageRes,
-                    text = "37",
+                    selectedImageRes = R.drawable.ic_comment,
+                    unselectedImageRes = R.drawable.ic_comment,
+                    text = "37".toCommaString(),
                     interval = 8.dp,
                     arrangement = Arrangement.Center,
                     onClick = {
@@ -193,9 +182,9 @@ fun FeedContent(
 
                 ImageWithTextBtn(
                     modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = voteImageRes,
-                    unselectedImageRes = voteImageRes,
-                    text = "705표",
+                    selectedImageRes = R.drawable.ic_vote,
+                    unselectedImageRes = R.drawable.ic_vote,
+                    text = "${1428.toCommaString()}표",
                     interval = 8.dp,
                     arrangement = Arrangement.End,
                     onClick = {
