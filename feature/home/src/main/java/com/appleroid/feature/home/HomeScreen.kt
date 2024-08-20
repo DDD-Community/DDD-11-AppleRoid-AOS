@@ -1,9 +1,11 @@
 package com.appleroid.feature.home
 
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -53,12 +54,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appleroid.core.designsystem.component.EmptyContent
-import com.appleroid.core.designsystem.component.MKungBtn
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
 import com.appleroid.core.designsystem.component.WithTextCheckBox
-import com.appleroid.core.designsystem.theme.BLACK
-import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY05
@@ -107,7 +105,7 @@ fun HomeScreen(
     val bottomSheetState = rememberModalBottomSheetState()
     val isMbtiResultSheetState = remember { mutableStateOf(false) }
     val isMoreSheetState = remember { mutableStateOf(false) }
-    val reportBtnEnable by remember { mutableStateOf(false) }
+    val showReportSelectScreen = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(screenWidth) {
@@ -144,7 +142,7 @@ fun HomeScreen(
                             isMbtiResultSheetState = isMbtiResultSheetState,
                             isMoreSheetState = isMoreSheetState,
                             bottomSheetState = bottomSheetState,
-                            reportBtnEnable = reportBtnEnable,
+                            showReportSelectScreen = showReportSelectScreen,
                             scope = scope
                         )
                     }
@@ -164,8 +162,8 @@ fun QuestionScreen(
     voteStatistics: List<VoteStatistics>,
     isMbtiResultSheetState: MutableState<Boolean>,
     isMoreSheetState: MutableState<Boolean>,
+    showReportSelectScreen: MutableState<Boolean>,
     bottomSheetState: SheetState,
-    reportBtnEnable: Boolean,
     scope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
@@ -196,7 +194,7 @@ fun QuestionScreen(
                     }
                 },
                 sheetState = bottomSheetState,
-                reportBtnEnable = reportBtnEnable
+                showReportSelectScreen = showReportSelectScreen
             )
         }
 
@@ -211,6 +209,10 @@ fun QuestionScreen(
                 },
                 sheetState = bottomSheetState
             )
+        }
+
+        if (showReportSelectScreen.value) {
+            //신고하기 화면 전환
         }
     }
 }
@@ -274,7 +276,8 @@ fun MyMbtiScreen(
 }
 
 @Composable
-fun ReportScreen(
+fun ReportButtonScreen(
+    showReportSelectScreen: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -299,7 +302,7 @@ fun ReportScreen(
                 )
             },
             onClick = {
-
+                showReportSelectScreen.value = true
             },
         )
     }
@@ -336,7 +339,7 @@ fun MbtiResultBottomSheet(
 fun ReportBottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState,
-    reportBtnEnable: Boolean,
+    showReportSelectScreen: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
     ModalBottomSheet(
@@ -345,7 +348,7 @@ fun ReportBottomSheet(
         containerColor = GREY06,
         dragHandle = { CustomDragHandle() }
     ) {
-        ReportScreen()
+        ReportButtonScreen(showReportSelectScreen = showReportSelectScreen)
     }
 }
 
