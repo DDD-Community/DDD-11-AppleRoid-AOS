@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -23,11 +25,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -47,13 +53,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appleroid.core.designsystem.component.EmptyContent
+import com.appleroid.core.designsystem.component.MKungBtn
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
 import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.theme.BLACK
+import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
+import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.theme.WHITE
 import com.appleroid.core.ui.FeedCard
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.feature.home.model.FeedType
@@ -94,7 +105,9 @@ fun HomeScreen(
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val bottomSheetState = rememberModalBottomSheetState()
-    val isSheetShowState = remember { mutableStateOf(false) }
+    val isMbtiResultSheetState = remember { mutableStateOf(false) }
+    val isMoreSheetState = remember { mutableStateOf(false) }
+    val reportBtnEnable by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(screenWidth) {
@@ -128,8 +141,10 @@ fun HomeScreen(
                         QuestionScreen(
                             feedInfoItems = feedInfo.feedInfoItems,
                             voteStatistics = voteStatics,
-                            isSheetShowState = isSheetShowState,
+                            isMbtiResultSheetState = isMbtiResultSheetState,
+                            isMoreSheetState = isMoreSheetState,
                             bottomSheetState = bottomSheetState,
+                            reportBtnEnable = reportBtnEnable,
                             scope = scope
                         )
                     }
@@ -142,43 +157,15 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun TopBar(
-    halfScreenWidth: Dp,
-    myMbti: String,
-    coroutineScope: CoroutineScope,
-    pagerState: PagerState
-) {
-    Row(modifier = Modifier.padding(top = 12.dp)) {
-        MKungTabRow(
-            tabWidth = halfScreenWidth,
-            feedTypes = listOf(stringResource(R.string.view_all), myMbti),
-            selectedTab = {
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(it)
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Image(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(end = 20.dp),
-            contentDescription = "alarm bell image",
-            painter = painterResource(R.drawable.ic_home_bell),
-        )
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
     feedInfoItems: List<FeedInfoItem>,
     voteStatistics: List<VoteStatistics>,
-    isSheetShowState: MutableState<Boolean>,
+    isMbtiResultSheetState: MutableState<Boolean>,
+    isMoreSheetState: MutableState<Boolean>,
     bottomSheetState: SheetState,
+    reportBtnEnable: Boolean,
     scope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
@@ -190,96 +177,41 @@ fun QuestionScreen(
             targetState = feedInfoItems.isEmpty(),
             label = "content empty"
         ) { isEmpty ->
-            if (isEmpty) {
-                EmptyContent(title = stringResource(R.string.content_empty))
-            } else {
+            if (isEmpty) EmptyContent(title = stringResource(R.string.content_empty))
+            else {
                 FeedList(
                     feedInfoItems = feedInfoItems,
-                    isSheetShowState = isSheetShowState,
+                    isMbtiResultSheetState = isMbtiResultSheetState,
+                    isMoreSheetState = isMoreSheetState,
                     modifier = modifier
                 )
             }
         }
 
-        if (isSheetShowState.value) {
+        if (isMoreSheetState.value) {
+            ReportBottomSheet(
+                onDismiss = {
+                    scope.launch {
+                        isMoreSheetState.value = false
+                    }
+                },
+                sheetState = bottomSheetState,
+                reportBtnEnable = reportBtnEnable
+            )
+        }
+
+        if (isMbtiResultSheetState.value) {
             MbtiResultBottomSheet(
                 feedInfoItem = feedInfoItems.firstOrNull(),
                 voteStatistics = voteStatistics,
                 onDismiss = {
                     scope.launch {
-                        isSheetShowState.value = false
+                        isMbtiResultSheetState.value = false
                     }
                 },
                 sheetState = bottomSheetState
             )
         }
-    }
-}
-
-@Composable
-fun MyMbtiScreen(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-
-    }
-}
-
-@Composable
-fun FeedList(
-    feedInfoItems: List<FeedInfoItem>,
-    isSheetShowState: MutableState<Boolean>,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
-    ) {
-        items(feedInfoItems, key = { it.id }) { item ->
-            val (oneSelected, onOneSelected) = remember { mutableStateOf(false) }
-            val (twoSelected, onTwoSelected) = remember { mutableStateOf(false) }
-
-            FeedCard(
-                feedInfoItem = item,
-                onMbtiResultClicked = {
-                    isSheetShowState.value = true
-                },
-                oneSelected = oneSelected,
-                onOneSelected = onOneSelected,
-                twoSelected = twoSelected,
-                onTwoSelected = onTwoSelected,
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MbtiResultBottomSheet(
-    feedInfoItem: FeedInfoItem?,
-    voteStatistics: List<VoteStatistics>,
-    onDismiss: () -> Unit,
-    sheetState: SheetState,
-    modifier: Modifier = Modifier
-) {
-    if (feedInfoItem == null) return
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        containerColor = GREY06,
-        dragHandle = null
-    ) {
-        MbtiResultScreen(
-            feedInfoItem = feedInfoItem,
-            voteStatistics = voteStatistics,
-            onClose = onDismiss,
-            modifier = modifier
-        )
     }
 }
 
@@ -331,6 +263,93 @@ fun MbtiResultScreen(
 }
 
 @Composable
+fun MyMbtiScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+
+    }
+}
+
+@Composable
+fun ReportScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 28.dp)
+    ) {
+        TextButton(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(
+                    color = GREY03,
+                    shape = RoundedCornerShape(12.dp)
+                ),
+            content = {
+                Text(
+                    text = stringResource(R.string.report),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = WHITE
+                )
+            },
+            onClick = {
+
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MbtiResultBottomSheet(
+    feedInfoItem: FeedInfoItem?,
+    voteStatistics: List<VoteStatistics>,
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    modifier: Modifier = Modifier
+) {
+    if (feedInfoItem == null) return
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = GREY06,
+        dragHandle = null
+    ) {
+        MbtiResultScreen(
+            feedInfoItem = feedInfoItem,
+            voteStatistics = voteStatistics,
+            onClose = onDismiss,
+            modifier = modifier
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ReportBottomSheet(
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    reportBtnEnable: Boolean,
+    modifier: Modifier = Modifier
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = GREY06,
+        dragHandle = { CustomDragHandle() }
+    ) {
+        ReportScreen()
+    }
+}
+
+@Composable
 fun HeaderWithCloseButton(onClose: () -> Unit) {
     Row(
         modifier = Modifier.padding(vertical = 22.dp)
@@ -351,6 +370,85 @@ fun HeaderWithCloseButton(onClose: () -> Unit) {
             painter = painterResource(R.drawable.ic_bottom_sheet_close),
             contentDescription = "Close button"
         )
+    }
+}
+
+@Composable
+fun TopBar(
+    halfScreenWidth: Dp,
+    myMbti: String,
+    coroutineScope: CoroutineScope,
+    pagerState: PagerState
+) {
+    Row(modifier = Modifier.padding(top = 12.dp)) {
+        MKungTabRow(
+            tabWidth = halfScreenWidth,
+            feedTypes = listOf(stringResource(R.string.view_all), myMbti),
+            selectedTab = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(it)
+                }
+            }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Image(
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(end = 20.dp),
+            contentDescription = "alarm bell image",
+            painter = painterResource(R.drawable.ic_home_bell),
+        )
+    }
+}
+
+@Composable
+fun CustomDragHandle() {
+    Box (
+        modifier = Modifier.padding(top = 12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .width(56.dp)
+                .height(5.dp) // 핸들의 높이를 설정
+                .clip(RoundedCornerShape(2.dp)) // 모서리를 둥글게 자름
+                .background(GREY05)
+        )
+    }
+}
+
+@Composable
+fun FeedList(
+    feedInfoItems: List<FeedInfoItem>,
+    isMbtiResultSheetState: MutableState<Boolean>,
+    isMoreSheetState: MutableState<Boolean>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
+        items(feedInfoItems, key = { it.id }) { item ->
+            val (oneSelected, onOneSelected) = remember { mutableStateOf(false) }
+            val (twoSelected, onTwoSelected) = remember { mutableStateOf(false) }
+
+            FeedCard(
+                feedInfoItem = item,
+                oneSelected = oneSelected,
+                onOneSelected = onOneSelected,
+                twoSelected = twoSelected,
+                onTwoSelected = onTwoSelected,
+                onMbtiResultClicked = {
+                    isMbtiResultSheetState.value = true
+                },
+                onMoreClicked = {
+                    isMoreSheetState.value = true
+                },
+                modifier = modifier
+            )
+        }
     }
 }
 

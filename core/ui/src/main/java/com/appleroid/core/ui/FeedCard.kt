@@ -2,6 +2,7 @@ package com.appleroid.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,11 +44,12 @@ import com.appleroid.model.FeedInfoItem
 @Composable
 fun FeedCard(
     feedInfoItem: FeedInfoItem,
-    onMbtiResultClicked: (Int) -> Unit,
     oneSelected: Boolean,
     onOneSelected: (Boolean) -> Unit,
     twoSelected: Boolean,
     onTwoSelected: (Boolean) -> Unit,
+    onMbtiResultClicked: (Int) -> Unit,
+    onMoreClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -60,7 +62,12 @@ fun FeedCard(
         shape = RoundedCornerShape(20.dp)
     ) {
         Column {
-            UserInfoRow(feedInfoItem)
+            UserInfoRow(
+                feedInfoItem = feedInfoItem,
+                onMoreClicked = {
+                    onMoreClicked()
+                }
+            )
 
             Box(
                 modifier = Modifier
@@ -164,7 +171,10 @@ fun FeedContent(
 }
 
 @Composable
-fun UserInfoRow(feedInfoItem: FeedInfoItem, modifier: Modifier = Modifier) {
+fun UserInfoRow(
+    onMoreClicked: () -> Unit,
+    feedInfoItem: FeedInfoItem,
+    modifier: Modifier = Modifier) {
     Row(modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
         CircleImage(
             modifier = Modifier.align(Alignment.CenterVertically),
@@ -205,7 +215,11 @@ fun UserInfoRow(feedInfoItem: FeedInfoItem, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.weight(1f))
 
         Image(
-            modifier = Modifier.align(Alignment.CenterVertically),
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .clickable {
+                    onMoreClicked()
+                },
             painter = painterResource(R.drawable.ic_home_contents_more),
             contentDescription = "more image"
         )
