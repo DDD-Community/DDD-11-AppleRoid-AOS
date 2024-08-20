@@ -6,8 +6,7 @@ data class FeedInfo(
 )
 
 data class FeedButtonItem(
-    val title: String,
-    val percent: String
+    val title: String
 )
 
 data class FeedInfoItem(

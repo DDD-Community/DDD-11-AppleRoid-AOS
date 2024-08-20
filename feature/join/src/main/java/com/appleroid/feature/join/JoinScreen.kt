@@ -1,6 +1,5 @@
 package com.appleroid.feature.join
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,12 +56,12 @@ import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.core.designsystem.utils.PhoneNumberVisualTransformation
 import com.appleroid.core.designsystem.utils.keyboardAsState
-import com.appleroid.feature.join.model.MbtiType
 import com.appleroid.feature.join.model.BottomSheetType
 import com.appleroid.feature.join.model.CarrierType
 import com.appleroid.feature.join.model.ENERGY_DIRECTION
 import com.appleroid.feature.join.model.JUDGMENT
 import com.appleroid.feature.join.model.MbtiImage
+import com.appleroid.feature.join.model.MbtiType
 import com.appleroid.feature.join.model.PagerType
 import com.appleroid.feature.join.model.RECOGNIZE
 import com.appleroid.feature.join.model.TermType

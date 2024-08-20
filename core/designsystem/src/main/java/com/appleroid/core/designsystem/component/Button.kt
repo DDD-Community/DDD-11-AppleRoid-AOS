@@ -2,16 +2,13 @@ package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,9 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.theme.BLACK
-import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.DOT
-import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
@@ -75,7 +70,12 @@ fun ImageWithTextBtn (
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable {
+            .clickable(
+                indication = null,
+                interactionSource = remember {
+                    MutableInteractionSource()
+                }
+            ) {
                 isClicked = !isClicked
                 onClick()
             },

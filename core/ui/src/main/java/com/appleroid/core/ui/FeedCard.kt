@@ -2,31 +2,52 @@ package com.appleroid.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.appleroid.core.designsystem.component.*
-import com.appleroid.core.designsystem.theme.*
+import com.appleroid.core.designsystem.component.CircleImage
+import com.appleroid.core.designsystem.component.DescriptionText
+import com.appleroid.core.designsystem.component.DottedDivider
+import com.appleroid.core.designsystem.component.ImageWithTextBtn
+import com.appleroid.core.designsystem.component.LabelText
+import com.appleroid.core.designsystem.component.MbtiCard
+import com.appleroid.core.designsystem.component.TitleText
+import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.theme.GREY03
+import com.appleroid.core.designsystem.theme.GREY04
+import com.appleroid.core.designsystem.theme.GREY06
+import com.appleroid.core.designsystem.theme.MBTI_ENFP
 import com.appleroid.core.designsystem.utils.toCommaString
 import com.appleroid.model.FeedButtonItem
-import com.appleroid.model.FeedCardResources
-import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
 
 @Composable
 fun FeedCard(
     feedInfoItem: FeedInfoItem,
-    buttonOneSelected: Boolean,
-    onButtonOneSelectedChange: (Boolean) -> Unit,
-    buttonTwoSelected: Boolean,
-    onButtonTwoSelectedChange: (Boolean) -> Unit,
+    onMbtiResultClicked: (Int) -> Unit,
+    oneSelected: Boolean,
+    onOneSelected: (Boolean) -> Unit,
+    twoSelected: Boolean,
+    onTwoSelected: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -39,16 +60,10 @@ fun FeedCard(
         shape = RoundedCornerShape(20.dp)
     ) {
         Column {
-            UserInfoRow(
-                profileImageRes = feedInfoItem.profileImageRes,
-                nickName = feedInfoItem.nickName,
-                mbti = feedInfoItem.mbti,
-                time = feedInfoItem.time,
-                moreImageRes = R.drawable.ic_home_contents_more
-            )
+            UserInfoRow(feedInfoItem)
 
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 contentAlignment = Alignment.Center
@@ -57,7 +72,7 @@ fun FeedCard(
                 DottedDivider()
 
                 Row(
-                    modifier = modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
@@ -76,10 +91,11 @@ fun FeedCard(
 
             FeedContent(
                 feedInfoItem = feedInfoItem,
-                buttonOneSelected = buttonOneSelected,
-                onChangedOneSelectButton = onButtonOneSelectedChange,
-                buttonTwoSelected = buttonTwoSelected,
-                onChangedTwoSelectButton = onButtonTwoSelectedChange
+                onMbtiResultClicked = onMbtiResultClicked,
+                oneSelected = oneSelected,
+                onOneSelected = onOneSelected,
+                twoSelected = twoSelected,
+                onTwoSelected = onTwoSelected
             )
         }
     }
@@ -88,15 +104,16 @@ fun FeedCard(
 @Composable
 fun FeedContent(
     feedInfoItem: FeedInfoItem,
-    buttonOneSelected: Boolean,
-    onChangedOneSelectButton: (Boolean) -> Unit,
-    buttonTwoSelected: Boolean,
-    onChangedTwoSelectButton: (Boolean) -> Unit,
+    onMbtiResultClicked: (Int) -> Unit,
+    oneSelected: Boolean,
+    onOneSelected: (Boolean) -> Unit,
+    twoSelected: Boolean,
+    onTwoSelected: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(
-            modifier = modifier.padding(24.dp)
+            modifier = Modifier.padding(24.dp)
         ) {
             TitleText(
                 modifier = Modifier.fillMaxWidth(),
@@ -110,39 +127,25 @@ fun FeedContent(
                 title = feedInfoItem.feedContent
             )
 
-            WithTextCheckBox(
-                modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth(),
-                isSelected = buttonOneSelected,
-                text = feedInfoItem.buttonItems[0].title,
-                percentText = "${feedInfoItem.buttonItems[0].percent}%",
-                onSelected = onChangedOneSelectButton
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            WithTextCheckBox(
-                modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth(),
-                isSelected = buttonTwoSelected,
-                text = feedInfoItem.buttonItems[1].title,
-                percentText = "${feedInfoItem.buttonItems[1].percent}%",
-                onSelected = onChangedTwoSelectButton
+            CheckBoxGroup(
+                oneSelected = oneSelected,
+                onOneSelected = onOneSelected,
+                twoSelected = twoSelected,
+                onTwoSelected = onTwoSelected,
+                buttonItems = feedInfoItem.buttonItems
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             ImageWithTextBtn(
-                modifier = modifier,
+                modifier = Modifier,
                 selectedImageRes = R.drawable.ic_plus,
                 unselectedImageRes = R.drawable.ic_plus,
                 text = stringResource(R.string.feature_home_feed_mbti_result),
                 interval = 2.dp,
                 arrangement = Arrangement.End,
                 onClick = {
-
+                    onMbtiResultClicked(feedInfoItem.id)
                 }
             )
 
@@ -155,60 +158,17 @@ fun FeedContent(
                     .background(GREY04)
             )
 
-            Row(modifier = Modifier.padding(top = 16.dp)) {
-                ImageWithTextBtn(
-                    modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = R.drawable.ic_like,
-                    unselectedImageRes = R.drawable.ic_un_like,
-                    text = "2145".toCommaString(),
-                    interval = 8.dp,
-                    arrangement = Arrangement.Start,
-                    onClick = {
-
-                    }
-                )
-
-                ImageWithTextBtn(
-                    modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = R.drawable.ic_comment,
-                    unselectedImageRes = R.drawable.ic_comment,
-                    text = "37".toCommaString(),
-                    interval = 8.dp,
-                    arrangement = Arrangement.Center,
-                    onClick = {
-
-                    }
-                )
-
-                ImageWithTextBtn(
-                    modifier = modifier.weight(weight = 1F, fill = false),
-                    selectedImageRes = R.drawable.ic_vote,
-                    unselectedImageRes = R.drawable.ic_vote,
-                    text = "${1428.toCommaString()}표",
-                    interval = 8.dp,
-                    arrangement = Arrangement.End,
-                    onClick = {
-
-                    }
-                )
-            }
+            ActionButtonsRow()
         }
     }
 }
 
 @Composable
-fun UserInfoRow(
-    modifier: Modifier = Modifier,
-    profileImageRes: Int,
-    nickName: String,
-    mbti: String,
-    time: String,
-    moreImageRes: Int
-) {
-    Row(modifier.padding(horizontal = 24.dp, vertical = 24.dp)) {
+fun UserInfoRow(feedInfoItem: FeedInfoItem, modifier: Modifier = Modifier) {
+    Row(modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
         CircleImage(
             modifier = Modifier.align(Alignment.CenterVertically),
-            imageRes = profileImageRes,
+            imageRes = feedInfoItem.profileImageRes,
             contentDescription = "profile image"
         )
 
@@ -218,21 +178,25 @@ fun UserInfoRow(
         ) {
             Row {
                 LabelText(
-                    modifier = Modifier.height(27.dp).align(Alignment.Top),
-                    text = nickName,
+                    modifier = Modifier
+                        .height(27.dp)
+                        .align(Alignment.Top),
+                    text = feedInfoItem.nickName,
                     style = MaterialTheme.typography.labelLarge,
                     color = Color.White
                 )
 
                 MbtiCard(
-                    modifier = Modifier.align(Alignment.CenterVertically).padding(start = 4.dp),
-                    text = mbti,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 4.dp),
+                    text = feedInfoItem.mbti,
                     cardColor = MBTI_ENFP
                 )
             }
 
             LabelText(
-                text = time,
+                text = feedInfoItem.time,
                 style = MaterialTheme.typography.bodySmall,
                 color = GREY03
             )
@@ -242,8 +206,79 @@ fun UserInfoRow(
 
         Image(
             modifier = Modifier.align(Alignment.CenterVertically),
-            painter = painterResource(moreImageRes),
+            painter = painterResource(R.drawable.ic_home_contents_more),
             contentDescription = "more image"
+        )
+    }
+}
+
+@Composable
+fun CheckBoxGroup(
+    oneSelected: Boolean,
+    onOneSelected: (Boolean) -> Unit,
+    twoSelected: Boolean,
+    onTwoSelected: (Boolean) -> Unit,
+    buttonItems: List<FeedButtonItem>,
+    modifier: Modifier = Modifier
+) {
+    WithTextCheckBox(
+        modifier = Modifier
+            .height(48.dp)
+            .fillMaxWidth(),
+        text = buttonItems[0].title,
+        isSelected = oneSelected,
+        onSelected = {
+            onOneSelected(it)
+            onTwoSelected(!it)
+        }
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    WithTextCheckBox(
+        modifier = Modifier
+            .height(48.dp)
+            .fillMaxWidth(),
+        text = buttonItems[1].title,
+        isSelected = twoSelected,
+        onSelected = {
+            onTwoSelected(it)
+            onOneSelected(!it)
+        }
+    )
+}
+
+@Composable
+fun ActionButtonsRow(modifier: Modifier = Modifier) {
+    Row(modifier = Modifier.padding(top = 16.dp)) {
+        ImageWithTextBtn(
+            modifier = modifier.weight(1F, false),
+            selectedImageRes = R.drawable.ic_like,
+            unselectedImageRes = R.drawable.ic_un_like,
+            text = "2145".toCommaString(),
+            interval = 8.dp,
+            arrangement = Arrangement.Start,
+            onClick = {}
+        )
+
+        ImageWithTextBtn(
+            modifier = modifier.weight(1F, false),
+            selectedImageRes = R.drawable.ic_comment,
+            unselectedImageRes = R.drawable.ic_comment,
+            text = "37".toCommaString(),
+            interval = 8.dp,
+            arrangement = Arrangement.Center,
+            onClick = {}
+        )
+
+        ImageWithTextBtn(
+            modifier = modifier.weight(1F, false),
+            selectedImageRes = R.drawable.ic_vote,
+            unselectedImageRes = R.drawable.ic_vote,
+            text = "${1428.toCommaString()}표",
+            interval = 8.dp,
+            arrangement = Arrangement.End,
+            onClick = {}
         )
     }
 }

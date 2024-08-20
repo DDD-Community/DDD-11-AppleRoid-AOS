@@ -3,4 +3,5 @@
     <string name="view_all">전체보기</string>
     <string name="mbti_result">MBTI별 결과 보기</string>
     <string name="content_empty">질문이 없습니다.</string>
+    <string name="unit_vote">표</string>
 </resources>

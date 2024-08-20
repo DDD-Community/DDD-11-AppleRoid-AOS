@@ -3,6 +3,7 @@ package com.appleroid.feature.home
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,16 +11,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,11 +47,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appleroid.core.designsystem.component.EmptyContent
+import com.appleroid.core.designsystem.component.TitleText
+import com.appleroid.core.designsystem.component.VoteStatisticsRow
+import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.theme.GREY03
+import com.appleroid.core.designsystem.theme.GREY04
+import com.appleroid.core.designsystem.theme.GREY06
+import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.ui.FeedCard
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.feature.home.model.FeedType
 import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
+import com.appleroid.model.VoteStatistics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -56,20 +76,26 @@ fun HomeRoute(
         onScreenWidthChanged = viewModel::setScreenWidthChanged,
         coroutineScope = rememberCoroutineScope(),
         pagerState = rememberPagerState { 2 },
-        feedInfo = viewModel.getFeedInfoItems()
+        feedInfo = viewModel.getFeedInfoItems(),
+        voteStatics = viewModel.getVoteStatics()
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     halfScreenWidth: Dp,
     feedInfo: FeedInfo,
+    voteStatics: List<VoteStatistics>,
     onScreenWidthChanged: (Dp) -> Unit,
     coroutineScope: CoroutineScope,
     pagerState: PagerState,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val bottomSheetState = rememberModalBottomSheetState()
+    val isSheetShowState = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(screenWidth) {
         onScreenWidthChanged(screenWidth)
@@ -92,10 +118,26 @@ fun HomeScreen(
                 coroutineScope = coroutineScope,
                 pagerState = pagerState
             )
-            ContentPager(
-                feedInfoItems = feedInfo.feedInfoItems,
-                pagerState = pagerState
-            )
+
+            HorizontalPager(
+                state = pagerState,
+                userScrollEnabled = false
+            ) { page ->
+                when (page) {
+                    FeedType.QUESTION.index -> {
+                        QuestionScreen(
+                            feedInfoItems = feedInfo.feedInfoItems,
+                            voteStatistics = voteStatics,
+                            isSheetShowState = isSheetShowState,
+                            bottomSheetState = bottomSheetState,
+                            scope = scope
+                        )
+                    }
+                    FeedType.MY_MBTI.index -> {
+                        MyMbtiScreen()
+                    }
+                }
+            }
         }
     }
 }
@@ -130,29 +172,14 @@ fun TopBar(
     }
 }
 
-@Composable
-fun ContentPager(
-    feedInfoItems: List<FeedInfoItem>,
-    pagerState: PagerState
-) {
-    HorizontalPager(
-        state = pagerState,
-        userScrollEnabled = false
-    ) { page ->
-        when (page) {
-            FeedType.QUESTION.index -> {
-                QuestionScreen(feedInfoItems = feedInfoItems)
-            }
-            FeedType.MY_MBTI.index -> {
-                MyMbtiScreen()
-            }
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
     feedInfoItems: List<FeedInfoItem>,
+    voteStatistics: List<VoteStatistics>,
+    isSheetShowState: MutableState<Boolean>,
+    bottomSheetState: SheetState,
+    scope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -163,32 +190,31 @@ fun QuestionScreen(
             targetState = feedInfoItems.isEmpty(),
             label = "content empty"
         ) { isEmpty ->
-            if (isEmpty) EmptyContent(title = stringResource(R.string.content_empty))
-            else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 20.dp, end = 20.dp),
-                ) {
-                    items(feedInfoItems, key = { it.id }) { item ->
-                        val (buttonOneSelected, onButtonOneSelectedChange) = remember { mutableStateOf(false) }
-                        val (buttonTwoSelected, onButtonTwoSelectedChange) = remember { mutableStateOf(false) }
-
-                        FeedCard(
-                            feedInfoItem = item,
-                            buttonOneSelected = buttonOneSelected,
-                            onButtonOneSelectedChange = onButtonOneSelectedChange,
-                            buttonTwoSelected = buttonTwoSelected,
-                            onButtonTwoSelectedChange = onButtonTwoSelectedChange,
-                            modifier = modifier
-                        )
-                    }
-                }
+            if (isEmpty) {
+                EmptyContent(title = stringResource(R.string.content_empty))
+            } else {
+                FeedList(
+                    feedInfoItems = feedInfoItems,
+                    isSheetShowState = isSheetShowState,
+                    modifier = modifier
+                )
             }
+        }
+
+        if (isSheetShowState.value) {
+            MbtiResultBottomSheet(
+                feedInfoItem = feedInfoItems.firstOrNull(),
+                voteStatistics = voteStatistics,
+                onDismiss = {
+                    scope.launch {
+                        isSheetShowState.value = false
+                    }
+                },
+                sheetState = bottomSheetState
+            )
         }
     }
 }
-
 
 @Composable
 fun MyMbtiScreen(
@@ -198,5 +224,156 @@ fun MyMbtiScreen(
         modifier = modifier.fillMaxSize()
     ) {
 
+    }
+}
+
+@Composable
+fun FeedList(
+    feedInfoItems: List<FeedInfoItem>,
+    isSheetShowState: MutableState<Boolean>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+    ) {
+        items(feedInfoItems, key = { it.id }) { item ->
+            val (oneSelected, onOneSelected) = remember { mutableStateOf(false) }
+            val (twoSelected, onTwoSelected) = remember { mutableStateOf(false) }
+
+            FeedCard(
+                feedInfoItem = item,
+                onMbtiResultClicked = {
+                    isSheetShowState.value = true
+                },
+                oneSelected = oneSelected,
+                onOneSelected = onOneSelected,
+                twoSelected = twoSelected,
+                onTwoSelected = onTwoSelected,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MbtiResultBottomSheet(
+    feedInfoItem: FeedInfoItem?,
+    voteStatistics: List<VoteStatistics>,
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    modifier: Modifier = Modifier
+) {
+    if (feedInfoItem == null) return
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = GREY06,
+        dragHandle = null
+    ) {
+        MbtiResultScreen(
+            feedInfoItem = feedInfoItem,
+            voteStatistics = voteStatistics,
+            onClose = onDismiss,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+fun MbtiResultScreen(
+    feedInfoItem: FeedInfoItem,
+    voteStatistics: List<VoteStatistics>,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
+        HeaderWithCloseButton(onClose)
+
+        WithTextCheckBox(
+            modifier = Modifier
+                .height(48.dp)
+                .fillMaxWidth(),
+            text = feedInfoItem.buttonItems[0].title,
+            isSelected = true,
+            onSelected = {}
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        WithTextCheckBox(
+            modifier = Modifier
+                .height(48.dp)
+                .fillMaxWidth(),
+            text = feedInfoItem.buttonItems[1].title,
+            isSelected = false,
+            onSelected = {}
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        HorizontalDivider(color = GREY04)
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        VoteStatisticsList(voteStatistics = voteStatistics)
+
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+fun HeaderWithCloseButton(onClose: () -> Unit) {
+    Row(
+        modifier = Modifier.padding(vertical = 22.dp)
+    ) {
+        TitleText(
+            modifier = Modifier
+                .wrapContentSize()
+                .height(27.dp),
+            title = stringResource(R.string.mbti_result)
+        )
+
+        Spacer(modifier = Modifier.weight(1F))
+
+        Image(
+            modifier = Modifier
+                .size(16.dp)
+                .clickable { onClose() },
+            painter = painterResource(R.drawable.ic_bottom_sheet_close),
+            contentDescription = "Close button"
+        )
+    }
+}
+
+@Composable
+fun VoteStatisticsList(
+    voteStatistics: List<VoteStatistics>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        items(voteStatistics, key = { it.id }) { item ->
+            val voteColor = if (item.id == 2) POINT01 else GREY03
+
+            VoteStatisticsRow(
+                mbtiType = item.mbti,
+                voteColor = voteColor,
+                votePercentage = item.votePercent,
+                voteCount = item.voteCount,
+                unitLabel = stringResource(R.string.unit_vote)
+            )
+        }
     }
 }

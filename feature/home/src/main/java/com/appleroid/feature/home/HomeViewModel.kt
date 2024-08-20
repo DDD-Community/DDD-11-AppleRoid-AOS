@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.appleroid.model.FeedButtonItem
 import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
+import com.appleroid.model.VoteStatistics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,8 +44,8 @@ class HomeViewModel @Inject constructor(
                     feedTitle = "테스트 메세지",
                     feedContent = "테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용 테스트 내용",
                     buttonItems = listOf(
-                        FeedButtonItem("테스트 1", "24"),
-                        FeedButtonItem("테스트 2", "76")
+                        FeedButtonItem("테스트 1"),
+                        FeedButtonItem("테스트 2")
                     )
                 ),
                 FeedInfoItem(
@@ -56,8 +57,8 @@ class HomeViewModel @Inject constructor(
                     feedTitle = "MBTI 궁금해?",
                     feedContent = "궁금해 궁금해 궁금해 궁금해 궁금해 궁금해 궁금해 궁금해 궁금해",
                     buttonItems = listOf(
-                        FeedButtonItem("궁금해 1", "44"),
-                        FeedButtonItem("궁금해 2", "56")
+                        FeedButtonItem("궁금해 1"),
+                        FeedButtonItem("궁금해 2")
                     )
                 ),
                 FeedInfoItem(
@@ -69,11 +70,22 @@ class HomeViewModel @Inject constructor(
                     feedTitle = "MBTI 의 역사는....",
                     feedContent = "테스트 데이터, 테스트 데이터, 테스트 데이터, 테스트 데이터, 테스트 데이터, 테스트 데이터, 테스트 데이터, 테스트 데이터",
                     buttonItems = listOf(
-                        FeedButtonItem("데이터 123", "14"),
-                        FeedButtonItem("데이터 234", "86")
+                        FeedButtonItem("데이터 123"),
+                        FeedButtonItem("데이터 234")
                     )
                 )
             )
+        )
+    }
+
+    fun getVoteStatics(): List<VoteStatistics> {
+        return listOf(
+            VoteStatistics(id = 1, mbti = "ISTJ", votePercent = 20, voteCount = 200),
+            VoteStatistics(id = 2, mbti = "ENFP", votePercent = 11, voteCount = 110),
+            VoteStatistics(id = 3, mbti = "ESTJ", votePercent = 42, voteCount = 420),
+            VoteStatistics(id = 4, mbti = "ENTP", votePercent = 5, voteCount = 50),
+            VoteStatistics(id = 5, mbti = "ISTP", votePercent = 18, voteCount = 180),
+            VoteStatistics(id = 6, mbti = "INFJ", votePercent = 4, voteCount = 40)
         )
     }
 }
