@@ -75,12 +75,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
+    reportBtnClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val halfScreenWidth by viewModel.halfScreenWidthState.collectAsState()
 
     HomeScreen(
         modifier = modifier,
+        reportBtnClicked = reportBtnClicked,
         halfScreenWidth = halfScreenWidth,
         onScreenWidthChanged = viewModel::setScreenWidthChanged,
         coroutineScope = rememberCoroutineScope(),
@@ -94,6 +96,7 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    reportBtnClicked: () -> Unit,
     halfScreenWidth: Dp,
     feedInfo: FeedInfo,
     voteStatics: List<VoteStatistics>,
@@ -137,6 +140,7 @@ fun HomeScreen(
                 when (page) {
                     FeedType.QUESTION.index -> {
                         QuestionScreen(
+                            reportBtnClicked = reportBtnClicked,
                             feedInfoItems = feedInfo.feedInfoItems,
                             voteStatistics = voteStatics,
                             isMbtiResultSheetState = isMbtiResultSheetState,
@@ -158,6 +162,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
+    reportBtnClicked: () -> Unit,
     feedInfoItems: List<FeedInfoItem>,
     voteStatistics: List<VoteStatistics>,
     isMbtiResultSheetState: MutableState<Boolean>,
@@ -193,6 +198,7 @@ fun QuestionScreen(
                         isMoreSheetState.value = false
                     }
                 },
+                reportBtnClicked = reportBtnClicked,
                 sheetState = bottomSheetState,
                 showReportSelectScreen = showReportSelectScreen
             )
@@ -212,7 +218,7 @@ fun QuestionScreen(
         }
 
         if (showReportSelectScreen.value) {
-            //신고하기 화면 전환
+            reportBtnClicked()
         }
     }
 }
@@ -339,6 +345,7 @@ fun MbtiResultBottomSheet(
 fun ReportBottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState,
+    reportBtnClicked: () -> Unit,
     showReportSelectScreen: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
@@ -348,7 +355,9 @@ fun ReportBottomSheet(
         containerColor = GREY06,
         dragHandle = { CustomDragHandle() }
     ) {
-        ReportButtonScreen(showReportSelectScreen = showReportSelectScreen)
+        ReportButtonScreen(
+            showReportSelectScreen = showReportSelectScreen
+        )
     }
 }
 
