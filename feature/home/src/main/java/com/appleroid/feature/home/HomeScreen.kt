@@ -1,11 +1,9 @@
 package com.appleroid.feature.home
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,7 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.appleroid.core.designsystem.component.EmptyContent
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
-import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY05
@@ -238,7 +236,7 @@ fun MbtiResultScreen(
     ) {
         HeaderWithCloseButton(onClose)
 
-        WithTextCheckBox(
+        WithTextCheckBoxCard(
             modifier = Modifier
                 .height(48.dp)
                 .fillMaxWidth(),
@@ -249,7 +247,7 @@ fun MbtiResultScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        WithTextCheckBox(
+        WithTextCheckBoxCard(
             modifier = Modifier
                 .height(48.dp)
                 .fillMaxWidth(),

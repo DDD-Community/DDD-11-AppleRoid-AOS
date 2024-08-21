@@ -32,7 +32,7 @@ import com.appleroid.core.designsystem.component.ImageWithTextBtn
 import com.appleroid.core.designsystem.component.LabelText
 import com.appleroid.core.designsystem.component.MbtiCard
 import com.appleroid.core.designsystem.component.TitleText
-import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY06
@@ -235,7 +235,7 @@ fun CheckBoxGroup(
     buttonItems: List<FeedButtonItem>,
     modifier: Modifier = Modifier
 ) {
-    WithTextCheckBox(
+    WithTextCheckBoxCard(
         modifier = Modifier
             .height(48.dp)
             .fillMaxWidth(),
@@ -249,7 +249,7 @@ fun CheckBoxGroup(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    WithTextCheckBox(
+    WithTextCheckBoxCard(
         modifier = Modifier
             .height(48.dp)
             .fillMaxWidth(),

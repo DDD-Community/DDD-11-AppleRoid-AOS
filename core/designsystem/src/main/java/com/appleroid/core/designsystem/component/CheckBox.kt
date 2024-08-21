@@ -30,13 +30,14 @@ import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.R
 import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.DOT
+import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.POINT01_23
 import com.appleroid.core.designsystem.theme.WHITE
 
 @Composable
-fun WithTextCheckBox(
+fun WithTextCheckBoxCard(
     modifier: Modifier = Modifier,
     isSelected : Boolean = false,
     text : String = "",
@@ -142,6 +143,36 @@ fun MbtiCheckBox(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun WithTextCheckBox(
+    modifier: Modifier = Modifier,
+    isSelected : Boolean = false,
+    text : String = "",
+    onSelected : (Boolean) -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clickable { onSelected(!isSelected) }
+    ){
+        Row(
+            modifier = Modifier.align(Alignment.CenterStart)
+        ){
+            Image(
+                painter = painterResource(if(isSelected) R.drawable.ic_select_check else R.drawable.ic_unselect_check),
+                contentDescription = "icon_check",
+                modifier = Modifier.size(16.dp)
+            )
+
+            Text(
+                text = text,
+                color = if(isSelected) WHITE else GREY01,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(start = 12.dp)
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ fun NavController.navigationToReportGraph(navOptions: NavOptions? = null){
 }
 
 fun NavGraphBuilder.reportGraph(
+    backBtnClicked: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
     navigation(
@@ -22,7 +23,7 @@ fun NavGraphBuilder.reportGraph(
         startDestination = REPORT_ROUTE,
     ){
         composable(route = REPORT_ROUTE) {
-            ReportRoute()
+            ReportRoute(backBtnClicked = backBtnClicked)
         }
         nestedGraphs()
     }

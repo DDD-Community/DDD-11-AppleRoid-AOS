@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="report">신고하기</string>
+    <string name="report_reason_select">신고 사유를 선택해주세요.</string>
+    <string name="report_reason_input">신고 사유를 입력해 주세요.</string>
+    <string name="submit">제출</string>
+</resources>

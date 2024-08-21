@@ -32,9 +32,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.appleroid.core.designsystem.theme.BLACK
 import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.POINT01
+import com.appleroid.core.designsystem.theme.WHITE
 import com.appleroid.core.designsystem.utils.toDp
 
 @Composable

@@ -49,7 +49,7 @@ import com.appleroid.core.designsystem.component.MKungTextField
 import com.appleroid.core.designsystem.component.MbtiCheckBox
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.TopAppBar
-import com.appleroid.core.designsystem.component.WithTextCheckBox
+import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
 import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY04
@@ -368,7 +368,7 @@ fun TermScreen(
         termList.forEach { type ->
             Spacer(modifier = Modifier.height(8.dp))
 
-            WithTextCheckBox(
+            WithTextCheckBoxCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
