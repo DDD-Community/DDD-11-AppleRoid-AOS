@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.appleroid.core.designsystem.component.CustomDragHandle
 import com.appleroid.core.designsystem.component.EmptyContent
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
@@ -269,6 +270,14 @@ fun MbtiResultScreen(
 }
 
 @Composable
+fun CommentScreen(
+    modifier: Modifier = Modifier
+) {
+    //댓글 바텀 시트 스크린
+
+}
+
+@Composable
 fun MyMbtiScreen(
     modifier: Modifier = Modifier
 ) {
@@ -413,20 +422,7 @@ fun TopBar(
     }
 }
 
-@Composable
-fun CustomDragHandle() {
-    Box (
-        modifier = Modifier.padding(top = 12.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .width(56.dp)
-                .height(5.dp) // 핸들의 높이를 설정
-                .clip(RoundedCornerShape(2.dp)) // 모서리를 둥글게 자름
-                .background(GREY05)
-        )
-    }
-}
+
 
 @Composable
 fun FeedList(
