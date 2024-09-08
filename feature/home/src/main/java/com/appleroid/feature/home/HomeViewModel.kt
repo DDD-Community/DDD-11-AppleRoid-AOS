@@ -5,6 +5,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appleroid.model.CommentInfo
+import com.appleroid.model.CommentItem
+import com.appleroid.model.CommentReplyItem
 import com.appleroid.model.FeedButtonItem
 import com.appleroid.model.FeedInfo
 import com.appleroid.model.FeedInfoItem
@@ -86,6 +89,83 @@ class HomeViewModel @Inject constructor(
             VoteStatistics(id = 4, mbti = "ENTP", votePercent = 5, voteCount = 50),
             VoteStatistics(id = 5, mbti = "ISTP", votePercent = 18, voteCount = 180),
             VoteStatistics(id = 6, mbti = "INFJ", votePercent = 4, voteCount = 40)
+        )
+    }
+
+    fun getCommentInfo(): CommentInfo {
+        return CommentInfo(
+            totalComment = 3,
+            commentItems = listOf(
+                CommentItem(
+                    id = 1,
+                    nickName = "홍길동",
+                    profileImageRes = R.drawable.ic_circle_test_1,
+                    mbti = "ESTJ",
+                    time =  "10시간 전",
+                    comment = "홍길동은 동해 번쩍 서해 번쩍, 홍길동은 동해 번쩍 서해 번쩍, 홍길동은 동해 번쩍 서해 번쩍, 홍길동은 동해 번쩍 서해 번쩍",
+                    liked = 193,
+                    replyCount = 1,
+                    replyItems = listOf(
+                        CommentReplyItem(
+                            id = 1,
+                            nickName = "장길산",
+                            profileImageRes = R.drawable.ic_circle_test_2,
+                            mbti = "ENFP",
+                            time = "6시간 전",
+                            liked = 2
+                        )
+                    )
+                ),
+                CommentItem(
+                    id = 2,
+                    nickName = "돼지",
+                    profileImageRes = R.drawable.ic_circle_test_2,
+                    mbti = "ENTP",
+                    time =  "6시간 전",
+                    comment = "돼지는 꿀꿀꿀 돼지는 꿀꿀꿀 돼지는 꿀꿀꿀 돼지는 꿀꿀꿀 돼지는 꿀꿀꿀 돼지는 꿀꿀꿀 돼지는 꿀꿀꿀",
+                    liked = 13,
+                    replyCount = 3,
+                    replyItems = listOf(
+                        CommentReplyItem(
+                            id = 1,
+                            nickName = "토끼",
+                            profileImageRes = R.drawable.ic_circle_test_3,
+                            mbti = "ISTJ",
+                            time = "4시간 전",
+                            liked = 11
+                        ),
+
+                        CommentReplyItem(
+                            id = 2,
+                            nickName = "거북이",
+                            profileImageRes = R.drawable.ic_circle_test_2,
+                            mbti = "INTP",
+                            time = "2시간 전",
+                            liked = 42
+                        ),
+
+                        CommentReplyItem(
+                            id = 3,
+                            nickName = "용왕",
+                            profileImageRes = R.drawable.ic_circle_test_3,
+                            mbti = "ESTJ",
+                            time = "1시간 전",
+                            liked = 30
+                        )
+                    )
+                ),
+                CommentItem(
+                    id = 3,
+                    nickName = "외톨이",
+                    profileImageRes = R.drawable.ic_circle_test_3,
+                    mbti = "INFP",
+                    comment = "외톨이 외톨이 외톨이 외톨이 외톨이 외톨이 외톨이",
+                    time =  "19시간 전",
+                    liked = 1,
+                    replyCount = 0,
+                    replyItems = listOf()
+                ),
+            )
         )
     }
 }

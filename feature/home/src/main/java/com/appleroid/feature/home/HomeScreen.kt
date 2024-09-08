@@ -1,5 +1,7 @@
 package com.appleroid.feature.home
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -25,47 +28,61 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.appleroid.core.designsystem.component.CircleImage
 import com.appleroid.core.designsystem.component.CustomDragHandle
 import com.appleroid.core.designsystem.component.EmptyContent
+import com.appleroid.core.designsystem.component.LabelText
+import com.appleroid.core.designsystem.component.MKungTextField
+import com.appleroid.core.designsystem.component.SendTextField
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
 import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
+import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
+import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
+import com.appleroid.core.designsystem.utils.PhoneNumberVisualTransformation
 import com.appleroid.core.ui.FeedCard
+import com.appleroid.core.ui.FeedComment
 import com.appleroid.core.ui.MKungTabRow
+import com.appleroid.core.ui.ReportButtonSheet
 import com.appleroid.feature.home.model.FeedType
-import com.appleroid.model.FeedInfo
+import com.appleroid.feature.home.model.ReplyType
+import com.appleroid.model.CommentInfo
+import com.appleroid.model.CommentItem
 import com.appleroid.model.FeedInfoItem
 import com.appleroid.model.VoteStatistics
 import kotlinx.coroutines.CoroutineScope
@@ -73,45 +90,42 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel(),
     reportBtnClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val halfScreenWidth by viewModel.halfScreenWidthState.collectAsState()
-
     HomeScreen(
         modifier = modifier,
-        reportBtnClicked = reportBtnClicked,
-        halfScreenWidth = halfScreenWidth,
-        onScreenWidthChanged = viewModel::setScreenWidthChanged,
-        coroutineScope = rememberCoroutineScope(),
-        pagerState = rememberPagerState { 2 },
-        feedInfo = viewModel.getFeedInfoItems(),
-        voteStatics = viewModel.getVoteStatics()
+        reportBtnClicked = reportBtnClicked
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = hiltViewModel(),
     reportBtnClicked: () -> Unit,
-    halfScreenWidth: Dp,
-    feedInfo: FeedInfo,
-    voteStatics: List<VoteStatistics>,
-    onScreenWidthChanged: (Dp) -> Unit,
-    coroutineScope: CoroutineScope,
-    pagerState: PagerState,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    pagerState: PagerState = rememberPagerState { 2 },
+    modifier: Modifier = Modifier
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val bottomSheetState = rememberModalBottomSheetState()
-    val isMbtiResultSheetState = remember { mutableStateOf(false) }
-    val isMoreSheetState = remember { mutableStateOf(false) }
-    val showReportSelectScreen = remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+
+    val halfScreenWidth by viewModel.halfScreenWidthState.collectAsState()
+
+    var isMbtiResultSheet by remember { mutableStateOf(false) }
+    var isMoreSheet by remember { mutableStateOf(false) }
+    var isReportSelectScreen by remember { mutableStateOf(false) }
+    var isCommentSheet by remember { mutableStateOf(false) }
+
+    var comment by remember { mutableStateOf("") }
+
+    val feedInfo = viewModel.getFeedInfoItems()
+    val voteStatics = viewModel.getVoteStatics()
+    val commentInfo = viewModel.getCommentInfo()
 
     LaunchedEffect(screenWidth) {
-        onScreenWidthChanged(screenWidth)
+        viewModel.setScreenWidthChanged(screenWidth)
     }
 
     Box(
@@ -142,11 +156,29 @@ fun HomeScreen(
                             reportBtnClicked = reportBtnClicked,
                             feedInfoItems = feedInfo.feedInfoItems,
                             voteStatistics = voteStatics,
-                            isMbtiResultSheetState = isMbtiResultSheetState,
-                            isMoreSheetState = isMoreSheetState,
-                            bottomSheetState = bottomSheetState,
-                            showReportSelectScreen = showReportSelectScreen,
-                            scope = scope
+                            isMbtiResultSheet = isMbtiResultSheet,
+                            onChangeMbtiResultSheet = {
+                                isMbtiResultSheet = it
+                            },
+                            isMoreSheet = isMoreSheet,
+                            onChangeMoreSheet = {
+                                isMoreSheet = it
+                            },
+                            comment = comment,
+                            onChangeComment = {
+                                comment = it
+                            },
+                            bottomSheet = bottomSheetState,
+                            isCommentSheet = isCommentSheet,
+                            onChangeCommentSheet = {
+                                isCommentSheet = it
+                            },
+                            commentInfo = commentInfo,
+                            isReportSelectScreen = isReportSelectScreen,
+                            onChangeReportSelectScreen = {
+                                isReportSelectScreen = true
+                            },
+                            coroutineScope = coroutineScope
                         )
                     }
                     FeedType.MY_MBTI.index -> {
@@ -162,13 +194,23 @@ fun HomeScreen(
 @Composable
 fun QuestionScreen(
     reportBtnClicked: () -> Unit,
+    isMbtiResultSheet: Boolean,
+    onChangeMbtiResultSheet: (Boolean) -> Unit,
+    isMoreSheet: Boolean,
+    onChangeMoreSheet: (Boolean) -> Unit,
+    isReportSelectScreen: Boolean,
+    onChangeReportSelectScreen: () -> Unit,
+    isCommentSheet: Boolean,
+    onChangeCommentSheet: (Boolean) -> Unit,
+    comment: String,
+    onChangeComment: (String) -> Unit,
+
     feedInfoItems: List<FeedInfoItem>,
     voteStatistics: List<VoteStatistics>,
-    isMbtiResultSheetState: MutableState<Boolean>,
-    isMoreSheetState: MutableState<Boolean>,
-    showReportSelectScreen: MutableState<Boolean>,
-    bottomSheetState: SheetState,
-    scope: CoroutineScope,
+    commentInfo: CommentInfo,
+
+    bottomSheet: SheetState,
+    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -183,41 +225,54 @@ fun QuestionScreen(
             else {
                 FeedList(
                     feedInfoItems = feedInfoItems,
-                    isMbtiResultSheetState = isMbtiResultSheetState,
-                    isMoreSheetState = isMoreSheetState,
-                    modifier = modifier
+                    onChangeMbtiResultSheet = onChangeMbtiResultSheet,
+                    onChangeMoreSheet = onChangeMoreSheet,
+                    onChangeCommentSheet = onChangeCommentSheet,
+                    modifier = modifier,
                 )
             }
         }
 
-        if (isMoreSheetState.value) {
+        if (isMoreSheet) {
             ReportBottomSheet(
                 onDismiss = {
-                    scope.launch {
-                        isMoreSheetState.value = false
+                    coroutineScope.launch {
+                        onChangeMoreSheet(false)
                     }
                 },
-                reportBtnClicked = reportBtnClicked,
-                sheetState = bottomSheetState,
-                showReportSelectScreen = showReportSelectScreen
+                sheetState = bottomSheet,
+                onChangeShowReportSelectScreen = onChangeReportSelectScreen
             )
         }
 
-        if (isMbtiResultSheetState.value) {
+        if (isMbtiResultSheet) {
             MbtiResultBottomSheet(
                 feedInfoItem = feedInfoItems.firstOrNull(),
                 voteStatistics = voteStatistics,
                 onDismiss = {
-                    scope.launch {
-                        isMbtiResultSheetState.value = false
+                    coroutineScope.launch {
+                        onChangeMbtiResultSheet(false)
                     }
                 },
-                sheetState = bottomSheetState
+                sheetState = bottomSheet
             )
         }
 
-        if (showReportSelectScreen.value) {
+        if (isCommentSheet) {
+            CommentBottomSheet(
+                sheetState = bottomSheet,
+                comment = comment,
+                onChangeComment = onChangeComment,
+                commentInfo = commentInfo,
+                onDismiss = {
+                    onChangeCommentSheet(false)
+                }
+            )
+        }
+
+        if (isReportSelectScreen) {
             reportBtnClicked()
+            onChangeReportSelectScreen()
         }
     }
 }
@@ -271,11 +326,127 @@ fun MbtiResultScreen(
 
 @Composable
 fun CommentScreen(
+    comment: String,
+    onChangeComment: (String) -> Unit,
+    commentUnit: Int,
+    commentItems: List<CommentItem>,
+    profileImageRes: Int,
     modifier: Modifier = Modifier
 ) {
-    //댓글 바텀 시트 스크린
 
+    val context = LocalContext.current
+
+    Box {
+        LazyColumn(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(bottom = 94.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.padding(start = 20.dp, bottom = 16.dp)
+                ) {
+                    LabelText(
+                        modifier = Modifier.height(19.dp),
+                        text = stringResource(com.appleroid.core.ui.R.string.feature_home_feed_comment),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = WHITE
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    LabelText(
+                        modifier = Modifier.height(19.dp),
+                        text = "$commentUnit",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = WHITE
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(GREY05))
+            }
+
+            items(commentItems, key = { it.id }) { item ->
+                var like by remember { mutableIntStateOf(item.liked) }
+
+                FeedComment(
+                    profileImageRes = item.profileImageRes,
+                    nickName = item.nickName,
+                    comment = item.comment,
+                    mbti = item.mbti,
+                    liked = like,
+                    onLikeSelected = {
+                        like = it
+                    },
+                    time = item.time,
+                    replyText = if (item.replyCount == 0) stringResource(R.string.comment_write)
+                    else stringResource(R.string.comment_show, item.replyCount)
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(94.dp)
+                .background(GREY06)
+                .align(Alignment.BottomCenter)
+                .imePadding() // 키보드가 올라올 때 뷰도 함께 올라옴
+        ) {
+            Spacer(modifier = Modifier.height(1.dp).fillMaxWidth().background(GREY04))
+
+            Row(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .align(Alignment.Center)
+            ) {
+                CircleImage(
+                    modifier = Modifier
+                        .width(36.dp)
+                        .height(36.dp),
+                    imageRes = profileImageRes,
+                    contentDescription = "user profile image"
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .background(
+                            color = GREY05,
+                            shape = RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    SendTextField(
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text
+                        ),
+                        btnImageRes = R.drawable.ic_input_send,
+                        placeholder = stringResource(R.string.comment_add, "홍길동"),
+                        placeholderColor = GREY03,
+                        text = comment,
+                        onChangeText = {
+                            onChangeComment(it)
+                        },
+                        onSendBtnClicked = {
+                            Toast.makeText(context, "댓글 등록 완료 !", Toast.LENGTH_SHORT).show()
+                            onChangeComment("")
+                        }
+                    )
+                }
+            }
+        }
+    }
 }
+
 
 @Composable
 fun MyMbtiScreen(
@@ -290,35 +461,12 @@ fun MyMbtiScreen(
 
 @Composable
 fun ReportButtonScreen(
-    showReportSelectScreen: MutableState<Boolean>,
+    onChangeShowReportSelectScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 28.dp)
-    ) {
-        TextButton(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(
-                    color = GREY03,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            content = {
-                Text(
-                    text = stringResource(R.string.report),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = WHITE
-                )
-            },
-            onClick = {
-                showReportSelectScreen.value = true
-            },
-        )
-    }
+    ReportButtonSheet(
+        onChangeShowReportSelectScreen = onChangeShowReportSelectScreen
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -352,8 +500,7 @@ fun MbtiResultBottomSheet(
 fun ReportBottomSheet(
     onDismiss: () -> Unit,
     sheetState: SheetState,
-    reportBtnClicked: () -> Unit,
-    showReportSelectScreen: MutableState<Boolean>,
+    onChangeShowReportSelectScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ModalBottomSheet(
@@ -363,7 +510,33 @@ fun ReportBottomSheet(
         dragHandle = { CustomDragHandle() }
     ) {
         ReportButtonScreen(
-            showReportSelectScreen = showReportSelectScreen
+            onChangeShowReportSelectScreen = onChangeShowReportSelectScreen
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommentBottomSheet(
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    comment: String,
+    onChangeComment: (String) -> Unit,
+    commentInfo: CommentInfo,
+    modifier: Modifier = Modifier
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = GREY06,
+        dragHandle = { CustomDragHandle() }
+    ) {
+        CommentScreen(
+            comment = comment,
+            onChangeComment = onChangeComment,
+            commentUnit = commentInfo.totalComment,
+            commentItems = commentInfo.commentItems,
+            profileImageRes = R.drawable.ic_circle_test_2
         )
     }
 }
@@ -422,13 +595,12 @@ fun TopBar(
     }
 }
 
-
-
 @Composable
 fun FeedList(
     feedInfoItems: List<FeedInfoItem>,
-    isMbtiResultSheetState: MutableState<Boolean>,
-    isMoreSheetState: MutableState<Boolean>,
+    onChangeMbtiResultSheet: (Boolean) -> Unit,
+    onChangeMoreSheet: (Boolean) -> Unit,
+    onChangeCommentSheet: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -447,10 +619,19 @@ fun FeedList(
                 twoSelected = twoSelected,
                 onTwoSelected = onTwoSelected,
                 onMbtiResultClicked = {
-                    isMbtiResultSheetState.value = true
+                    onChangeMbtiResultSheet(true)
                 },
                 onMoreClicked = {
-                    isMoreSheetState.value = true
+                    onChangeMoreSheet(true)
+                },
+                likeClicked = {
+
+                },
+                commentClicked = {
+                    onChangeCommentSheet(true)
+                },
+                voteClicked = {
+
                 },
                 modifier = modifier
             )
