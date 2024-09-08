@@ -3,8 +3,10 @@ package com.appleroid.core.designsystem.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -55,44 +57,69 @@ fun MKungBtn(
 }
 
 @Composable
-fun ImageWithTextBtn (
+fun ImageWithTextBtn(
     modifier: Modifier = Modifier,
     selectedImageRes: Int,
     unselectedImageRes: Int,
     text: String,
     interval: Dp = 2.dp,
-    arrangement: Arrangement.Horizontal,
-    onClick: () -> Unit
+    arrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    orientation: Orientation = Orientation.Horizontal,
+    onClick: (Boolean) -> Unit,
 ) {
     var isClicked by remember { mutableStateOf(false) }
     val imageResource = if (isClicked) selectedImageRes else unselectedImageRes
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember {
-                    MutableInteractionSource()
-                }
-            ) {
-                isClicked = !isClicked
-                onClick()
-            },
-        horizontalArrangement = arrangement,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    val content: @Composable () -> Unit = {
         Image(
             painter = painterResource(imageResource),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = modifier.padding(end = interval)
+            modifier = modifier.padding(
+                end = if (orientation == Orientation.Horizontal) interval else 0.dp,
+                bottom = if (orientation == Orientation.Vertical) interval else 0.dp
+            )
         )
         LabelText(
-            modifier = modifier.align(Alignment.CenterVertically),
+            modifier = modifier,
             text = text,
             color = WHITE,
             style = MaterialTheme.typography.labelSmall
         )
+    }
+
+    when (orientation) {
+        Orientation.Horizontal -> Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    isClicked = !isClicked
+                    onClick(isClicked)
+                },
+            horizontalArrangement = arrangement,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            content()
+        }
+
+        Orientation.Vertical -> Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    isClicked = !isClicked
+                    onClick(isClicked)
+                },
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            content()
+        }
     }
 }

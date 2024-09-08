@@ -2,6 +2,7 @@ package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,12 +30,16 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.theme.BLACK
 import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.GREY03
+import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
 import com.appleroid.core.designsystem.utils.toDp
@@ -151,3 +156,48 @@ fun CheckTextField(
         }
     }
 }
+
+@Composable
+fun SendTextField(
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    btnImageRes : Int,
+    placeholderColor: Color,
+    placeholder : String = "",
+    text : String,
+    onChangeText : (String) -> Unit,
+    onSendBtnClicked: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .background(
+                color = GREY05,
+                shape = RoundedCornerShape(12.dp)
+            ),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        MKungTextField(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            textStyle = MaterialTheme.typography.labelMedium,
+            placeholder = placeholder,
+            placeholderColor = placeholderColor,
+            keyboardOptions = keyboardOptions,
+            text = text,
+            onChangedText = onChangeText
+        )
+
+        Image(
+            painter = painterResource(btnImageRes),
+            contentDescription = "comment add",
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 10.dp)
+                .clickable {
+                    onSendBtnClicked()
+                }
+        )
+    }
+}
+

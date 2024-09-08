@@ -44,7 +44,8 @@ fun mKungTypography() = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.dp.textSp,
         lineHeight = 16.dp.textSp,
-        letterSpacing = 0.dp.textSp
+        letterSpacing = 0.dp.textSp,
+        color = WHITE
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
