@@ -50,6 +50,9 @@ fun FeedCard(
     onTwoSelected: (Boolean) -> Unit,
     onMbtiResultClicked: (Int) -> Unit,
     onMoreClicked: () -> Unit,
+    likeClicked: (Boolean) -> Unit,
+    commentClicked: () -> Unit,
+    voteClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -102,7 +105,10 @@ fun FeedCard(
                 oneSelected = oneSelected,
                 onOneSelected = onOneSelected,
                 twoSelected = twoSelected,
-                onTwoSelected = onTwoSelected
+                onTwoSelected = onTwoSelected,
+                likeClicked = likeClicked,
+                commentClicked = commentClicked,
+                voteClicked = voteClicked
             )
         }
     }
@@ -116,6 +122,9 @@ fun FeedContent(
     onOneSelected: (Boolean) -> Unit,
     twoSelected: Boolean,
     onTwoSelected: (Boolean) -> Unit,
+    likeClicked: (Boolean) -> Unit,
+    commentClicked: () -> Unit,
+    voteClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -165,7 +174,11 @@ fun FeedContent(
                     .background(GREY04)
             )
 
-            ActionButtonsRow()
+            ActionButtonsRow(
+                likeClicked = likeClicked,
+                commentClicked = commentClicked,
+                voteClicked = voteClicked
+            )
         }
     }
 }
@@ -263,7 +276,12 @@ fun CheckBoxGroup(
 }
 
 @Composable
-fun ActionButtonsRow(modifier: Modifier = Modifier) {
+fun ActionButtonsRow(
+    modifier: Modifier = Modifier,
+    likeClicked: (Boolean) -> Unit,
+    commentClicked: () -> Unit,
+    voteClicked: () -> Unit
+) {
     Row(modifier = Modifier.padding(top = 16.dp)) {
         ImageWithTextBtn(
             modifier = modifier.weight(1F, false),
@@ -272,7 +290,9 @@ fun ActionButtonsRow(modifier: Modifier = Modifier) {
             text = "2145".toCommaString(),
             interval = 8.dp,
             arrangement = Arrangement.Start,
-            onClick = {}
+            onClick = {
+                likeClicked(it)
+            }
         )
 
         ImageWithTextBtn(
@@ -282,7 +302,9 @@ fun ActionButtonsRow(modifier: Modifier = Modifier) {
             text = "37".toCommaString(),
             interval = 8.dp,
             arrangement = Arrangement.Center,
-            onClick = {}
+            onClick = {
+                commentClicked()
+            }
         )
 
         ImageWithTextBtn(
@@ -292,7 +314,9 @@ fun ActionButtonsRow(modifier: Modifier = Modifier) {
             text = "${1428.toCommaString()}표",
             interval = 8.dp,
             arrangement = Arrangement.End,
-            onClick = {}
+            onClick = {
+                voteClicked()
+            }
         )
     }
 }

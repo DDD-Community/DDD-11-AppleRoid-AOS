@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feature_home_feed_mbti_result">MBTI별 결과 보기</string>
+    <string name="feature_home_feed_comment">댓글</string>
+    <string name="feature_home_feed_reporting">신고하기</string>
+    <string name="feature_home_feed_report">신고</string>
 </resources>
