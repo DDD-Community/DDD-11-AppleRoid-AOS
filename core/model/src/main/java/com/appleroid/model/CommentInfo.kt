@@ -12,7 +12,7 @@ data class CommentItem(
     val mbti: String,
     val comment: String,
     val time: String,
-    val subCommentCount: Int,
+    val replyCount: Int,
     val liked: Int,
     val replyItems: List<CommentReplyItem?>
 )

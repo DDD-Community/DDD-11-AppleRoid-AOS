@@ -20,7 +20,7 @@ import com.appleroid.core.designsystem.theme.WHITE
 
 @Composable
 fun ReportButtonSheet(
-    showReportSelectScreen: MutableState<Boolean>
+    onChangeShowReportSelectScreen: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -43,9 +43,7 @@ fun ReportButtonSheet(
                     color = WHITE
                 )
             },
-            onClick = {
-                showReportSelectScreen.value = true
-            }
+            onClick = onChangeShowReportSelectScreen
         )
     }
 }

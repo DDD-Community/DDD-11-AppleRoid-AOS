@@ -4,5 +4,8 @@
     <string name="mbti_result">MBTI별 결과 보기</string>
     <string name="content_empty">질문이 없습니다.</string>
     <string name="unit_vote">표</string>
-    <string name="report">신고하기</string>
+    <string name="comment_hide">답글 숨기기</string>
+    <string name="comment_write">답글 쓰기</string>
+    <string name="comment_show">답글 %s개 보기</string>
+    <string name="comment_add">%s님에게 답글 추가</string>
 </resources>

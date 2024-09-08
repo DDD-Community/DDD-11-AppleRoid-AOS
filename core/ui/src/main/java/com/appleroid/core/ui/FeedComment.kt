@@ -39,14 +39,14 @@ import com.appleroid.core.designsystem.utils.toCommaString
 
 @Composable
 fun FeedComment(
-    isCommentSheet: MutableState<Boolean>,
     nickName: String,
     comment: String,
     mbti: String,
     time: String,
     replyText:String,
     profileImageRes: Int,
-    liked: Int
+    liked: Int,
+    onLikeSelected:(Int) -> Unit
 ) {
     // 클릭되면 isCommentSheet.value = true
     Row(
@@ -144,7 +144,8 @@ fun FeedComment(
                 orientation = Orientation.Vertical,
                 arrangement = Arrangement.Center,
                 onClick = {
-
+                    if (it) onLikeSelected(liked + 1)
+                    else onLikeSelected(liked - 1)
                 }
             )
         }
