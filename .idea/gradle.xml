@@ -37,6 +37,7 @@
             <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/join" />
             <option value="$PROJECT_DIR$/feature/mypage" />
+            <option value="$PROJECT_DIR$/feature/report" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

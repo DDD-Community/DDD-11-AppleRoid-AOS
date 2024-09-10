@@ -6,7 +6,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.appleroid.core.designsystem.utils.textSp
 
 @Composable
@@ -45,7 +44,8 @@ fun mKungTypography() = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.dp.textSp,
         lineHeight = 16.dp.textSp,
-        letterSpacing = 0.dp.textSp
+        letterSpacing = 0.dp.textSp,
+        color = WHITE
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,

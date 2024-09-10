@@ -9,6 +9,8 @@ import com.appleroid.feature.home.navigation.navigationToHomeGraph
 import com.appleroid.feature.join.navigation.JOIN_GRAPH_ROUTE_PATTERN
 import com.appleroid.feature.join.navigation.joinGraph
 import com.appleroid.feature.mypage.navigation.myPageGraph
+import com.appleroid.feature.report.navigation.navigationToReportGraph
+import com.appleroid.feature.report.navigation.reportGraph
 import com.appleroid.mkung.ui.MKungAppState
 
 @Composable
@@ -24,8 +26,9 @@ fun MKungNavHost(
         modifier = modifier,
     ){
         joinGraph(joinCompleteClicked = navController::navigationToHomeGraph) {}
-        homeGraph { }
+        homeGraph(reportBtnClicked = navController::navigationToReportGraph) { }
         askGraph{ }
         myPageGraph{ }
+        reportGraph(backBtnClicked = navController::navigationToHomeGraph) { }
     }
 }

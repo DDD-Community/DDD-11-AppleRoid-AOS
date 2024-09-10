@@ -60,3 +60,6 @@ fun Char.isKorean(): Boolean {
             unicodeBlock == Character.UnicodeBlock.HANGUL_JAMO_EXTENDED_A ||
             unicodeBlock == Character.UnicodeBlock.HANGUL_JAMO_EXTENDED_B
 }
+
+fun Int.toCommaString() = "%,d".format(this)
+fun String.toCommaString() = this.toIntOrNull()?.toCommaString() ?: this // 문자열이 숫자인지 확인하고, 숫자인 경우에만 콤마 추가
