@@ -27,7 +27,7 @@ fun MKungNavHost(
     ){
         joinGraph(joinCompleteClicked = navController::navigationToHomeGraph) {}
         homeGraph(reportBtnClicked = navController::navigationToReportGraph) { }
-        askGraph{ }
+        askGraph { }
         myPageGraph{ }
         reportGraph(backBtnClicked = navController::navigationToHomeGraph) { }
     }
