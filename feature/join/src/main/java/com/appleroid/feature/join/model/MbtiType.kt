@@ -13,37 +13,38 @@ const val PLANNING = 3
 enum class MbtiType(
     val key : String,
     val type : Int,
-    @StringRes val stringRes: Int,
-    @DrawableRes val drawableRes: Int
+    @StringRes val stringRes: Int
 ){
-    I("I",ENERGY_DIRECTION,R.string.mbti_i, R.drawable.icon_i),
-    E("E",ENERGY_DIRECTION,R.string.mbti_e, R.drawable.icon_e),
-    S("S",RECOGNIZE,R.string.mbti_s, R.drawable.icon_s),
-    N("N",RECOGNIZE,R.string.mbti_n, R.drawable.icon_n),
-    T("T",JUDGMENT,R.string.mbti_t, R.drawable.icon_t),
-    F("F",JUDGMENT,R.string.mbti_f, R.drawable.icon_f),
-    P("P",PLANNING,R.string.mbti_p, R.drawable.icon_p),
-    J("J",PLANNING,R.string.mbti_j, R.drawable.icon_j)
+    I("I",ENERGY_DIRECTION,R.string.mbti_i),
+    E("E",ENERGY_DIRECTION,R.string.mbti_e),
+    S("S",RECOGNIZE,R.string.mbti_s),
+    N("N",RECOGNIZE,R.string.mbti_n),
+    T("T",JUDGMENT,R.string.mbti_t),
+    F("F",JUDGMENT,R.string.mbti_f),
+    P("P",PLANNING,R.string.mbti_p),
+    J("J",PLANNING,R.string.mbti_j)
 }
 
-enum class MbtiImage(
+enum class MbtiResult(
     val value : String,
-    @DrawableRes val drawableRes: Int
+    @DrawableRes val drawableRes: Int,
+    @StringRes val titleRes: Int,
+    @StringRes val descriptionRes: Int
 ){
-    ENFJ("ENFJ",R.drawable.img_enfj),
-    ENFP("ENFP",R.drawable.img_enfp),
-    ENTJ("ENTJ",R.drawable.img_entj),
-    ENTP("ENTP",R.drawable.img_entp),
-    ESFJ("ESFJ",R.drawable.img_esfj),
-    ESFP("ESFP",R.drawable.img_esfp),
-    ESTJ("ESTJ",R.drawable.img_estj),
-    ESTP("ESTP",R.drawable.img_estp),
-    INFJ("INFJ",R.drawable.img_infj),
-    INFP("INFP",R.drawable.img_infp),
-    INTJ("INTJ",R.drawable.img_intj),
-    INTP("INTP",R.drawable.img_intp),
-    ISFJ("ISFJ",R.drawable.img_isfj),
-    ISFP("ISFP",R.drawable.img_isfp),
-    ISTJ("ISTJ",R.drawable.img_istj),
-    ISTP("ISTP",R.drawable.img_istp)
+    ENFJ("ENFJ",R.drawable.img_login_enfj, R.string.enfj_title, R.string.enfj_discription),
+    ENFP("ENFP",R.drawable.img_login_enfp, R.string.enfp_title, R.string.enfp_discription),
+    ENTJ("ENTJ",R.drawable.img_login_entj, R.string.entj_title, R.string.entj_discription),
+    ENTP("ENTP",R.drawable.img_login_entp, R.string.entp_title, R.string.entp_discription),
+    ESFJ("ESFJ",R.drawable.img_login_esfj, R.string.esfj_title, R.string.esfj_discription),
+    ESFP("ESFP",R.drawable.img_login_esfp, R.string.esfp_title, R.string.esfp_discription),
+    ESTJ("ESTJ",R.drawable.img_login_estj, R.string.estj_title, R.string.estj_discription),
+    ESTP("ESTP",R.drawable.img_login_estp, R.string.estp_title, R.string.estp_discription),
+    INFJ("INFJ",R.drawable.img_login_infj, R.string.infj_title, R.string.infj_discription),
+    INFP("INFP",R.drawable.img_login_infp, R.string.infp_title, R.string.infp_discription),
+    INTJ("INTJ",R.drawable.img_login_intj, R.string.intj_title, R.string.intj_discription),
+    INTP("INTP",R.drawable.img_login_intp, R.string.intp_title, R.string.intp_discription),
+    ISFJ("ISFJ",R.drawable.img_login_isfj, R.string.isfj_title, R.string.isfj_discription),
+    ISFP("ISFP",R.drawable.img_login_isfp, R.string.isfp_title, R.string.isfp_discription),
+    ISTJ("ISTJ",R.drawable.img_login_istj, R.string.istj_title, R.string.istj_discription),
+    ISTP("ISTP",R.drawable.img_login_istp, R.string.istp_title, R.string.istp_discription)
 }

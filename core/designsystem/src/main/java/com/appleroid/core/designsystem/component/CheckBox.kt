@@ -26,15 +26,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.appleroid.core.designsystem.R
 import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
 import com.appleroid.core.designsystem.theme.DOT
 import com.appleroid.core.designsystem.theme.GREY01
+import com.appleroid.core.designsystem.theme.GREY02
+import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.POINT01_23
 import com.appleroid.core.designsystem.theme.WHITE
+import com.appleroid.core.designsystem.utils.textSp
 
 @Composable
 fun WithTextCheckBoxCard(
@@ -65,14 +72,18 @@ fun WithTextCheckBoxCard(
             Image(
                 painter = painterResource(if(isSelected) R.drawable.ic_select_check else R.drawable.ic_unselect_check),
                 contentDescription = "icon_check",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
             )
 
-            Text(
+            LabelText(
                 text = text,
                 color = if(isSelected) POINT01 else WHITE,
                 style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(start = 12.dp)
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .align(Alignment.CenterVertically)
             )
 
             if (percentText.isNotBlank()) {
@@ -82,7 +93,9 @@ fun WithTextCheckBoxCard(
                     text = percentText,
                     color = WHITE,
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(start = 8.dp, end = 16.dp)
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 16.dp)
+                        .align(Alignment.CenterVertically)
                 )
             }
         }
@@ -94,7 +107,6 @@ fun MbtiCheckBox(
     modifier: Modifier = Modifier,
     key : String,
     text : String,
-    painter : Painter,
     isChecked : Boolean,
     onClick : (String) -> Unit
 ){
@@ -106,43 +118,31 @@ fun MbtiCheckBox(
     ){
         Box(modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
-            .clip(CircleShape)
+            .padding(5.dp)
+            .clip(RoundedCornerShape(12.dp))
             .border(
-                width = 1.dp,
-                color = if(isChecked) POINT01 else BTN_BACKGROUND,
-                shape = CircleShape
+                width = 2.dp,
+                color = if(isChecked) POINT01 else GREY04,
+                shape = RoundedCornerShape(12.dp)
             )
-            .background(
-                color = if(isChecked) POINT01_23 else BTN_BACKGROUND,
-            )
+            .background(color = GREY04)
         ){
-            Icon(
-                painter = painter,
-                tint = if(isChecked) POINT01 else DOT,
-                contentDescription = "mbti",
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-
-        if(isChecked){
-            Box(
+            LabelText(
                 modifier = Modifier
-                    .width(33.dp)
-                    .height(20.dp)
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        color = POINT01,
-                        shape = RoundedCornerShape(6.dp)
-                    )
-            ){
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = Color.Black,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+                    .height(44.dp)
+                    .align(Alignment.Center),
+                text = text,
+                color = if(isChecked) POINT01 else GREY02,
+                style = TextStyle(
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.dp.textSp,
+                    lineHeight = 21.dp.textSp,
+                    letterSpacing = 0.dp.textSp,
+                    textAlign = TextAlign.Center
+                ),
+                alignment = Alignment.Center
+            )
         }
     }
 }

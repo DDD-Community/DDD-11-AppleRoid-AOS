@@ -35,15 +35,15 @@ fun mKungTypography() = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.dp.textSp,
-        lineHeight = 20.dp.textSp,
+        lineHeight = 27.dp.textSp,
         letterSpacing = 0.dp.textSp,
         color = WHITE
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Normal,
         fontSize = 14.dp.textSp,
-        lineHeight = 16.dp.textSp,
+        lineHeight = 21.dp.textSp,
         letterSpacing = 0.dp.textSp,
         color = WHITE
     ),
@@ -53,6 +53,14 @@ fun mKungTypography() = Typography(
         fontSize = 12.dp.textSp,
         lineHeight = 16.dp.textSp,
         letterSpacing = 0.dp.textSp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.dp.textSp,
+        lineHeight = 21.dp.textSp,
+        letterSpacing = 0.dp.textSp,
+        color = WHITE
     ),
     displaySmall = TextStyle(
         fontFamily = FontFamily.Default,
