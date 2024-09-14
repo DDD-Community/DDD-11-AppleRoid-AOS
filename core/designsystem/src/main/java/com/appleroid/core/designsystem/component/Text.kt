@@ -36,7 +36,8 @@ fun TitleText(
 fun DescriptionText(
     modifier: Modifier = Modifier,
     title : String = "",
-    alignment: Alignment = Alignment.CenterStart
+    alignment: Alignment = Alignment.CenterStart,
+    textAlign: TextAlign = TextAlign.Left
 ){
     Box(
         modifier = modifier
@@ -45,6 +46,7 @@ fun DescriptionText(
             text = title,
             color = GREY01,
             style = MaterialTheme.typography.labelMedium,
+            textAlign = textAlign,
             modifier = Modifier.align(alignment)
         )
     }

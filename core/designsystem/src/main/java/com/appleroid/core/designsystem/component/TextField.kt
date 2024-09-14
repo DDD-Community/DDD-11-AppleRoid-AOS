@@ -50,7 +50,6 @@ fun MKungTextField(
     textStyle: TextStyle,
     placeholder : String = "",
     placeholderColor : Color = GREY01,
-    isLimitWidth : Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -87,10 +86,7 @@ fun MKungTextField(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .focusRequester(focusRequester)
-                .then(
-                    if(isLimitWidth) Modifier.width(textFieldWidth)
-                    else Modifier.wrapContentWidth()
-                )
+                .fillMaxWidth()
         )
     }
 }

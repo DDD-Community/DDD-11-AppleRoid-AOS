@@ -20,8 +20,11 @@ fun Int.toDp(): Dp {
     return (this / Resources.getSystem().displayMetrics.density).dp
 }
 class PhoneNumberVisualTransformation : VisualTransformation {
+
     override fun filter(text: AnnotatedString): TransformedText {
-        val formattedText = formatPhoneNumber(text.text)
+
+        val formattedText = formatPhoneNumber(text.text.replace(".","").replace(",",""))
+
         val offsetMapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int): Int {
                 if (offset <= 2) return offset
