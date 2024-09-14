@@ -1,6 +1,5 @@
 package com.appleroid.feature.home
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
@@ -34,11 +33,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -61,26 +58,21 @@ import com.appleroid.core.designsystem.component.CircleImage
 import com.appleroid.core.designsystem.component.CustomDragHandle
 import com.appleroid.core.designsystem.component.EmptyContent
 import com.appleroid.core.designsystem.component.LabelText
-import com.appleroid.core.designsystem.component.MKungTextField
 import com.appleroid.core.designsystem.component.SendTextField
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.VoteStatisticsRow
 import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
-import com.appleroid.core.designsystem.theme.BTN_BACKGROUND
-import com.appleroid.core.designsystem.theme.GREY01
 import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY05
 import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
-import com.appleroid.core.designsystem.utils.PhoneNumberVisualTransformation
 import com.appleroid.core.ui.FeedCard
 import com.appleroid.core.ui.FeedComment
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.core.ui.ReportButtonSheet
 import com.appleroid.feature.home.model.FeedType
-import com.appleroid.feature.home.model.ReplyType
 import com.appleroid.model.CommentInfo
 import com.appleroid.model.CommentItem
 import com.appleroid.model.FeedInfoItem
