@@ -2,7 +2,6 @@ package com.appleroid.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,33 +12,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.appleroid.core.designsystem.component.CircleImage
 import com.appleroid.core.designsystem.component.DescriptionText
 import com.appleroid.core.designsystem.component.DottedDivider
 import com.appleroid.core.designsystem.component.ImageWithTextBtn
-import com.appleroid.core.designsystem.component.LabelText
-import com.appleroid.core.designsystem.component.MbtiCard
 import com.appleroid.core.designsystem.component.TitleText
 import com.appleroid.core.designsystem.component.WithTextCheckBoxCard
-import com.appleroid.core.designsystem.theme.GREY03
 import com.appleroid.core.designsystem.theme.GREY04
 import com.appleroid.core.designsystem.theme.GREY06
-import com.appleroid.core.designsystem.theme.MBTI_ENFP
 import com.appleroid.core.designsystem.utils.toCommaString
 import com.appleroid.model.FeedButtonItem
 import com.appleroid.model.FeedInfoItem
+import com.appleroid.model.UserInfoRowItem
 
 @Composable
 fun FeedCard(
@@ -66,10 +58,15 @@ fun FeedCard(
     ) {
         Column {
             UserInfoRow(
-                feedInfoItem = feedInfoItem,
-                onMoreClicked = {
-                    onMoreClicked()
-                }
+                userInfoRowItem = UserInfoRowItem.Feed(
+                    profileImageRes = feedInfoItem.profileImageRes,
+                    nickName = feedInfoItem.nickName,
+                    mbti = feedInfoItem.mbti,
+                    time = feedInfoItem.time,
+                    onMoreClicked = {
+                        onMoreClicked()
+                    }
+                )
             )
 
             Box(
@@ -180,62 +177,6 @@ fun FeedContent(
                 voteClicked = voteClicked
             )
         }
-    }
-}
-
-@Composable
-fun UserInfoRow(
-    onMoreClicked: () -> Unit,
-    feedInfoItem: FeedInfoItem,
-    modifier: Modifier = Modifier) {
-    Row(modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
-        CircleImage(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            imageRes = feedInfoItem.profileImageRes,
-            contentDescription = "profile image"
-        )
-
-        Column(modifier = Modifier
-            .wrapContentSize()
-            .padding(start = 12.dp)
-        ) {
-            Row {
-                LabelText(
-                    modifier = Modifier
-                        .height(27.dp)
-                        .align(Alignment.Top),
-                    text = feedInfoItem.nickName,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = Color.White
-                )
-
-                MbtiCard(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(start = 4.dp),
-                    text = feedInfoItem.mbti,
-                    cardColor = MBTI_ENFP
-                )
-            }
-
-            LabelText(
-                text = feedInfoItem.time,
-                style = MaterialTheme.typography.bodySmall,
-                color = GREY03
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Image(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .clickable {
-                    onMoreClicked()
-                },
-            painter = painterResource(R.drawable.ic_home_contents_more),
-            contentDescription = "more image"
-        )
     }
 }
 
