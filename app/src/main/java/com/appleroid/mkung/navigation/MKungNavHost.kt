@@ -3,6 +3,8 @@ package com.appleroid.mkung.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.appleroid.feature.alarm.navigation.alarmGraph
+import com.appleroid.feature.alarm.navigation.navigationToAlarmGraph
 import com.appleroid.feature.ask.navigation.askGraph
 import com.appleroid.feature.home.navigation.homeGraph
 import com.appleroid.feature.home.navigation.navigationToHomeGraph
@@ -26,9 +28,12 @@ fun MKungNavHost(
         modifier = modifier,
     ){
         joinGraph(joinCompleteClicked = navController::navigationToHomeGraph) {}
-        homeGraph(reportBtnClicked = navController::navigationToReportGraph) { }
+        homeGraph(
+            reportBtnClicked = navController::navigationToReportGraph,
+            alarmBtnClicked = navController::navigationToAlarmGraph) {}
         askGraph{ }
         myPageGraph{ }
+        alarmGraph { }
         reportGraph(backBtnClicked = navController::navigationToHomeGraph) { }
     }
 }

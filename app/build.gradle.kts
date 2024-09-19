@@ -58,6 +58,7 @@ dependencies {
     implementation(projects.feature.mypage)
     implementation(projects.feature.join)
     implementation(projects.feature.report)
+    implementation(projects.feature.alarm)
 
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
