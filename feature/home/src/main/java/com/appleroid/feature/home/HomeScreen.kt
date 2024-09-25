@@ -69,7 +69,6 @@ import com.appleroid.core.designsystem.theme.GREY06
 import com.appleroid.core.designsystem.theme.POINT01
 import com.appleroid.core.designsystem.theme.WHITE
 import com.appleroid.core.ui.FeedCard
-import com.appleroid.core.ui.FeedComment
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.core.ui.ReportButtonSheet
 import com.appleroid.core.ui.UserInfoRow
