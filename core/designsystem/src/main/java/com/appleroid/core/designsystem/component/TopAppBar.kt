@@ -1,6 +1,7 @@
 package com.appleroid.core.designsystem.component
 
 import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -61,6 +62,7 @@ fun BackWithTextTopAppBar(
                 .align(Alignment.CenterStart)
                 .size(28.dp)
                 .clickable {
+                  
                 }
         )
 

@@ -17,7 +17,6 @@ import com.appleroid.feature.ask.navigation.ASK_ROUTE
 import com.appleroid.feature.ask.navigation.navigationToAskGraph
 import com.appleroid.feature.home.navigation.HOME_ROUTE
 import com.appleroid.feature.home.navigation.navigationToHomeGraph
-import com.appleroid.feature.join.navigation.navigationToJoinGraph
 import com.appleroid.feature.mypage.navigation.MY_PAGE_ROUTE
 import com.appleroid.feature.mypage.navigation.navigationToMyPageGraph
 import com.appleroid.mkung.navigation.TopDestination

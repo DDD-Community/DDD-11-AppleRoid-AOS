@@ -72,10 +72,12 @@ import com.appleroid.core.ui.FeedCard
 import com.appleroid.core.ui.FeedComment
 import com.appleroid.core.ui.MKungTabRow
 import com.appleroid.core.ui.ReportButtonSheet
+import com.appleroid.core.ui.UserInfoRow
 import com.appleroid.feature.home.model.FeedType
 import com.appleroid.model.CommentInfo
 import com.appleroid.model.CommentItem
 import com.appleroid.model.FeedInfoItem
+import com.appleroid.model.UserInfoRowItem
 import com.appleroid.model.VoteStatistics
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -83,11 +85,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeRoute(
     reportBtnClicked: () -> Unit,
+    alarmBtnClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     HomeScreen(
         modifier = modifier,
-        reportBtnClicked = reportBtnClicked
+        reportBtnClicked = reportBtnClicked,
+        alarmBtnClicked = alarmBtnClicked
     )
 }
 
@@ -96,6 +100,7 @@ fun HomeRoute(
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     reportBtnClicked: () -> Unit,
+    alarmBtnClicked: () -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState { 2 },
     modifier: Modifier = Modifier
@@ -135,7 +140,8 @@ fun HomeScreen(
                 halfScreenWidth = halfScreenWidth,
                 myMbti = feedInfo.myMbti,
                 coroutineScope = coroutineScope,
-                pagerState = pagerState
+                pagerState = pagerState,
+                alarmBtnClicked = alarmBtnClicked
             )
 
             HorizontalPager(
@@ -364,18 +370,19 @@ fun CommentScreen(
             items(commentItems, key = { it.id }) { item ->
                 var like by remember { mutableIntStateOf(item.liked) }
 
-                FeedComment(
-                    profileImageRes = item.profileImageRes,
-                    nickName = item.nickName,
-                    comment = item.comment,
-                    mbti = item.mbti,
-                    liked = like,
-                    onLikeSelected = {
-                        like = it
-                    },
-                    time = item.time,
-                    replyText = if (item.replyCount == 0) stringResource(R.string.comment_write)
-                    else stringResource(R.string.comment_show, item.replyCount)
+                UserInfoRow(
+                    userInfoRowItem = UserInfoRowItem.Comment(
+                        profileImageRes = item.profileImageRes,
+                        nickName = item.nickName,
+                        content = item.comment,
+                        mbti = item.mbti,
+                        liked = like,
+                        time = item.time,
+                        reply = if (item.replyCount == 0) stringResource(R.string.comment_write) else stringResource(R.string.comment_show, item.replyCount),
+                        onLikeSelected = {
+                            like = it
+                        }
+                    )
                 )
             }
         }
@@ -562,7 +569,8 @@ fun TopBar(
     halfScreenWidth: Dp,
     myMbti: String,
     coroutineScope: CoroutineScope,
-    pagerState: PagerState
+    pagerState: PagerState,
+    alarmBtnClicked: () -> Unit
 ) {
     Row(modifier = Modifier.padding(top = 12.dp)) {
         MKungTabRow(
@@ -580,9 +588,12 @@ fun TopBar(
         Image(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .padding(end = 20.dp),
+                .padding(end = 20.dp)
+                .clickable {
+                    alarmBtnClicked()
+                },
             contentDescription = "alarm bell image",
-            painter = painterResource(R.drawable.ic_home_bell),
+            painter = painterResource(R.drawable.ic_home_bell)
         )
     }
 }
