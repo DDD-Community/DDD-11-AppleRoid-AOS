@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="ask_add">질문 추가</string>
+    <string name="ask_input_title">제목을 입력해 주세요</string>
+    <string name="ask_input_content_free">내용을 자유롭게 입력해 보세요.</string>
+    <string name="ask_vote">투표</string>
+    <string name="ask_input_vote">투표 항목을 입력해 주세요.</string>
+    <string name="registration">등록</string>
+</resources>
