@@ -6,11 +6,13 @@ import androidx.navigation.compose.NavHost
 import com.appleroid.feature.alarm.navigation.alarmGraph
 import com.appleroid.feature.alarm.navigation.navigationToAlarmGraph
 import com.appleroid.feature.ask.navigation.askGraph
+import com.appleroid.feature.ask.navigation.navigationToAskGraph
 import com.appleroid.feature.home.navigation.homeGraph
 import com.appleroid.feature.home.navigation.navigationToHomeGraph
 import com.appleroid.feature.join.navigation.JOIN_GRAPH_ROUTE_PATTERN
 import com.appleroid.feature.join.navigation.joinGraph
 import com.appleroid.feature.mypage.navigation.myPageGraph
+import com.appleroid.feature.mypage.navigation.navigationToMyPageGraph
 import com.appleroid.feature.report.navigation.navigationToReportGraph
 import com.appleroid.feature.report.navigation.reportGraph
 import com.appleroid.mkung.ui.MKungAppState
@@ -30,9 +32,12 @@ fun MKungNavHost(
         joinGraph(joinCompleteClicked = navController::navigationToHomeGraph) {}
         homeGraph(
             reportBtnClicked = navController::navigationToReportGraph,
-            alarmBtnClicked = navController::navigationToAlarmGraph) {}
-        askGraph{ }
-        myPageGraph{ }
+            alarmBtnClicked = navController::navigationToAlarmGraph,
+            askBtnClicked = navController::navigationToAskGraph,
+            myPageBtnClicked = navController::navigationToMyPageGraph
+        ) {
+
+        }
         alarmGraph { }
         reportGraph(backBtnClicked = navController::navigationToHomeGraph) { }
     }

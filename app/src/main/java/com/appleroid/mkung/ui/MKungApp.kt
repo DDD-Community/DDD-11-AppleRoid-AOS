@@ -44,19 +44,6 @@ fun MKungApp(
         contentColor = Color.Black,
         containerColor = Color.Black,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        bottomBar = {
-            if(appState.currentDestination.isTopDestinationInHierarchy(TopDestination.HOME) ||
-                appState.currentDestination.isTopDestinationInHierarchy(TopDestination.ASK) ||
-                appState.currentDestination.isTopDestinationInHierarchy(TopDestination.MY_PAGE))
-            {
-                BottomBar(
-                    destinations = appState.topDestinations,
-                    onNavigateToDestination = appState::navigateToTopDestination,
-                    currentDestination = appState.currentDestination,
-                    modifier = Modifier.testTag("BottomBar")
-                )
-            }
-        }
     ) {
 
         Box(
@@ -77,62 +64,3 @@ fun MKungApp(
         }
     }
 }
-
-
-@Composable
-private fun BottomBar(
-    destinations: List<TopDestination>,
-    onNavigateToDestination: (TopDestination) -> Unit,
-    currentDestination: NavDestination?,
-    modifier: Modifier = Modifier,
-) {
-
-    Column(
-        modifier = modifier
-            .background(GREY06)
-    ){
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(GREY04)
-        )
-
-        NavigationBar(
-            containerColor = GREY06,
-        ) {
-            destinations.forEach { destination ->
-                destination.iconTextId?.let {
-                    val selected = currentDestination.isTopDestinationInHierarchy(destination)
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = { onNavigateToDestination(destination) },
-                        icon = {
-                            Icon(
-                                painter = painterResource(destination.unselectedIcon),
-                                contentDescription = null,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        },
-                        selectedIcon = {
-                            Icon(
-                                painter = painterResource(destination.selectedIcon),
-                                contentDescription = null,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        },
-                        label = { Text(stringResource(destination.iconTextId)) }
-                    )
-                }
-            }
-        }
-    }
-
-}
-
-
-
-private fun NavDestination?.isTopDestinationInHierarchy(destination: TopDestination) =
-    this?.hierarchy?.any {
-        it.route?.contains(destination.name, true) ?: false
-    } ?: false

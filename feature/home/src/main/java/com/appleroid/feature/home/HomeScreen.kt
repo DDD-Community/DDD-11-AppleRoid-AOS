@@ -85,24 +85,30 @@ import kotlinx.coroutines.launch
 fun HomeRoute(
     reportBtnClicked: () -> Unit,
     alarmBtnClicked: () -> Unit,
+    askBtnClicked: () -> Unit,
+    myPageBtnClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     HomeScreen(
         modifier = modifier,
         reportBtnClicked = reportBtnClicked,
-        alarmBtnClicked = alarmBtnClicked
+        alarmBtnClicked = alarmBtnClicked,
+        askBtnClicked = askBtnClicked,
+        myPageBtnClicked = myPageBtnClicked
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     reportBtnClicked: () -> Unit,
     alarmBtnClicked: () -> Unit,
+    askBtnClicked: () -> Unit,
+    myPageBtnClicked: () -> Unit,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState { 2 },
-    modifier: Modifier = Modifier
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val bottomSheetState = rememberModalBottomSheetState()
@@ -276,10 +282,10 @@ fun QuestionScreen(
 
 @Composable
 fun MbtiResultScreen(
+    modifier: Modifier = Modifier,
     feedInfoItem: FeedInfoItem,
     voteStatistics: List<VoteStatistics>,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier

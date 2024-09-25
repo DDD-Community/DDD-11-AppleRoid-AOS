@@ -18,6 +18,8 @@ fun NavController.navigationToHomeGraph(navOptions: NavOptions? = null){
 fun NavGraphBuilder.homeGraph(
     reportBtnClicked: () -> Unit,
     alarmBtnClicked: () -> Unit,
+    askBtnClicked: () -> Unit,
+    myPageBtnClicked: () -> Unit,
     nestedGraphs: NavGraphBuilder.() -> Unit
 ) {
     navigation(
@@ -27,7 +29,10 @@ fun NavGraphBuilder.homeGraph(
         composable(route = HOME_ROUTE) {
             HomeRoute(
                 reportBtnClicked = reportBtnClicked,
-                alarmBtnClicked = alarmBtnClicked)
+                alarmBtnClicked = alarmBtnClicked,
+                askBtnClicked = askBtnClicked,
+                myPageBtnClicked = myPageBtnClicked
+            )
         }
         nestedGraphs()
     }
